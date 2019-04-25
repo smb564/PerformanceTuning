@@ -39,7 +39,7 @@ prev = requests.get("http://192.168.32.1:8080/performance").json()[1]
 
 for _ in range(iterations):
     # server records results (mean latency, 99 latency etc.) for 1 minute windows
-    # (we can configure window inteval in tomcat/webapps/tpc-w/WEB-INF/web.xml file)
+    # (we can configure window interval in tomcat/webapps/tpc-w/WEB-INF/web.xml file)
     time.sleep(interval)
     res = requests.get("http://192.168.32.1:8080/performance").json()
     throughput.append(float(res[1] - prev)/interval)
@@ -60,24 +60,29 @@ with open(out_filename, "w") as f:
 if tuning_interval != -1:
     tune_locations = [x*60.0/interval for x in range(1, 12)]
 
+x_axis = [x*interval for x in range(iterations)]
+
 # plot the data
-plt.plot(throughput)
+plt.plot(x_axis, throughput)
 if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
-plt.ylabel("server side throughput (req/seq)")
+plt.ylabel("server side throughput (req/seq) (20 seconds window)")
 plt.savefig("server_metrics/" + case_name + "/throughput.png", bbox_inches="tight")
+plt.clf()
 
-plt.plot(mean_latency)
+plt.plot(x_axis, mean_latency)
 if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
-plt.ylabel("server side response time (milliseconds)")
+plt.ylabel("server side latency (milliseconds) (60 seconds window)")
 plt.savefig("server_metrics/" + case_name + "/mean_latency.png", bbox_inches="tight")
+plt.clf()
 
-plt.plot(threads)
+plt.plot(x_axis, threads)
 if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("Current Thread Count")
 plt.savefig("server_metrics/" + case_name + '/thread_counts.png', bbox_inches='tight')
+plt.clf()
