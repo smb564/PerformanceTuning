@@ -1,2 +1,0 @@
-throughput,0.9
-latency,282353.2364775217
