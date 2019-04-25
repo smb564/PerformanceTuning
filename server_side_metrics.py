@@ -8,11 +8,13 @@ throughput = []
 mean_latency = []
 threads = []
 
-case_name = "browsing_default"
+case_name = "ordering_400_tuning"
 try:
     os.makedirs("server_metrics/"+case_name)
 except FileExistsError:
     print("directory already exists")
+    if input("are you sure want to go ahead (Y/n)?") == "n":
+        exit()
 
 out_filename = "server_metrics/" + case_name + "/data.csv"
 
@@ -24,7 +26,7 @@ interval = 20
 # calculate the iterations from duration/interval
 iterations = int(duration/interval)
 
-tuning_interval = -1  # in seconds (from bayesian_opt.py), -1 if not tuning
+tuning_interval = 60  # in seconds (from bayesian_opt.py), -1 if not tuning TODO: Set the correct value every time
 
 # save the configurations in a file
 with open("server_metrics/" + case_name + "/params.csv", "w") as f:
@@ -58,7 +60,7 @@ with open(out_filename, "w") as f:
         writer.writerow([throughput[i], mean_latency[i], threads[i]])
 
 if tuning_interval != -1:
-    tune_locations = [x*60.0/interval for x in range(1, 12)]
+    tune_locations = [x*tuning_interval for x in range(1, 12)]
 
 x_axis = [x*interval for x in range(iterations)]
 

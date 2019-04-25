@@ -1,9 +1,5 @@
 import requests
 import time
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from hyperopt import hp
 from hyperopt import tpe
 from hyperopt import Trials
@@ -42,7 +38,7 @@ with open("tuner_results/results.csv", "w") as f:
 with open("tuner_results/param_history.csv", "w") as f:
     writer = csv.writer(f)
     for line in param_history:
-        writer.writerow(line)
+        writer.writerow([line])
 
 #
 # # requests.put("http://localhost:8080/setparam?name=maxThreads&value=" + str(50))

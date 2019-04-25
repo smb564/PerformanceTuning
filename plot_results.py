@@ -1,16 +1,16 @@
 import matplotlib.pyplot as plt
 import csv
 
-save = False  # overwrite the previous plots
+save = True  # overwrite the previous plots
 
-case = "browsing_400_default"
+case = "ordering_400_tuning"
 dir = "server_metrics/" + case + "/"
 
 with open(dir + "params.csv") as f:
     reader = csv.reader(f)
-    duration = next(reader)[1]
-    interval = next(reader)[1]
-    tuning_interval = next(reader)[1]
+    duration = int(next(reader)[1])
+    interval = int(next(reader)[1])
+    tuning_interval = int(next(reader)[1])
 
 throughput = []
 mean_latency = []
@@ -23,14 +23,14 @@ with open(dir + "data.csv") as f:
     next(reader)
 
     for row in reader:
-        throughput.append(row[0])
-        mean_latency.append(row[1])
-        threads.append(row[2])
+        throughput.append(float(row[0]))
+        mean_latency.append(float(row[1]))
+        threads.append(float(row[2]))
 
 if tuning_interval != -1:
-    tune_locations = [x*60.0/interval for x in range(1, 12)]
+    tune_locations = [x*tuning_interval for x in range(1, 12)]
 
-x_axis = [x*interval for x in range(duration/interval)]
+x_axis = [x*interval for x in range(duration//interval)]
 
 # plot the data
 plt.plot(x_axis, throughput)
