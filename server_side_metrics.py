@@ -8,7 +8,7 @@ throughput = []
 mean_latency = []
 threads = []
 
-case_name = "browsing_200_default"
+case_name = "browsing_200_default_without_apache"
 try:
     os.makedirs("server_metrics/"+case_name)
 except FileExistsError:
@@ -26,7 +26,7 @@ interval = 20
 # calculate the iterations from duration/interval
 iterations = int(duration/interval)
 
-tuning_interval = 60  # in seconds (from bayesian_opt.py), -1 if not tuning TODO: Set the correct value every time
+tuning_interval = -1  # in seconds (from bayesian_opt.py), -1 if not tuning TODO: Set the correct value every time
 
 # save the configurations in a file
 with open("server_metrics/" + case_name + "/params.csv", "w") as f:
@@ -70,6 +70,7 @@ if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("server side throughput (req/seq) (20 seconds window)")
+plt.xlabel("time (seconds)")
 plt.savefig("server_metrics/" + case_name + "/throughput.png", bbox_inches="tight")
 plt.clf()
 
@@ -78,6 +79,7 @@ if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("server side latency (milliseconds) (60 seconds window)")
+plt.xlabel("time (seconds)")
 plt.savefig("server_metrics/" + case_name + "/mean_latency.png", bbox_inches="tight")
 plt.clf()
 
@@ -86,5 +88,6 @@ if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("Current Thread Count")
+plt.xlabel("time (seconds)")
 plt.savefig("server_metrics/" + case_name + '/thread_counts.png', bbox_inches='tight')
 plt.clf()
