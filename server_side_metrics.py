@@ -8,7 +8,7 @@ throughput = []
 mean_latency = []
 threads = []
 
-case_name = "ordering_400_tuning"
+case_name = "browsing_200_default"
 try:
     os.makedirs("server_metrics/"+case_name)
 except FileExistsError:
@@ -49,7 +49,7 @@ for _ in range(iterations):
     mean_latency.append(res[2])
 
     # get the current thread pool size as well
-    threads.append(requests.get("http://192.168.32.1:8080/getparam?name=currentThreadCount").json())
+    threads.append(requests.get("http://192.168.32.1:8080/getparam?name=poolSize").json())
 
 # save the data
 with open(out_filename, "w") as f:
