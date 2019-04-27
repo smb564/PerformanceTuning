@@ -10,7 +10,8 @@ data = []
 param_history = []
 tuning_interval = 60  # in seconds
 
-prev_param = -1
+# query and get the current thread pool size (assuming fixed thread pool)
+prev_param = int(requests.get("http://192.168.32.1:8080/getparam?name=minSpareThreads").json())
 
 
 def objective(x):
@@ -40,9 +41,6 @@ space = hp.uniform('x', 20, 600)
 tpe_trials = Trials()
 tpe_best = fmin(fn=objective, space=space, algo=tpe.suggest, trials=tpe_trials, max_evals=12)
 
-# query and get the current thread pool size (assuming fixed thread pool)
-prev_param = int(requests.get("http://192.168.32.1:8080/getparam?name=minSpareThreads").json()[0])
-
 
 with open("tuner_results/results.csv", "w") as f:
     writer = csv.writer(f)
@@ -55,6 +53,7 @@ with open("tuner_results/param_history.csv", "w") as f:
     for line in param_history:
         writer.writerow([line])
 
+print("Optimization complete")
 #
 # # requests.put("http://localhost:8080/setparam?name=maxThreads&value=" + str(50))
 # # print(requests.get("http://localhost:8080/performance").json())

@@ -3,7 +3,7 @@ import csv
 
 save = True  # overwrite the previous plots
 
-case = "ordering_400_tuning"
+case = "browsing_400_tuning_without_apache"
 dir = "server_metrics/" + case + "/"
 
 with open(dir + "params.csv") as f:

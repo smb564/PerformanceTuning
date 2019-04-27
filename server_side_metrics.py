@@ -3,12 +3,15 @@ import matplotlib.pyplot as plt
 import time
 import csv
 import os
+import sys
 
 throughput = []
 mean_latency = []
 threads = []
 
-case_name = "browsing_200_default_without_apache"
+# case_name = "shopping_200_tuning_without_apache"
+case_name = sys.argv[1]
+
 try:
     os.makedirs("server_metrics/"+case_name)
 except FileExistsError:
@@ -91,3 +94,5 @@ plt.ylabel("Current Thread Count")
 plt.xlabel("time (seconds)")
 plt.savefig("server_metrics/" + case_name + '/thread_counts.png', bbox_inches='tight')
 plt.clf()
+
+print("metrics collection complete")
