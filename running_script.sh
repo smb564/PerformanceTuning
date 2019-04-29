@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
+TUNE=false
+CASE_NAME="shopping_100_tuning_without_apache"
+
+if [[ -d "server_metrics/$CASE_NAME" ]]
+then
+    read -p "Directory already exists. Replace?" yn
+    case $yn in
+        [Yy]* ) true;;
+        * ) exit;;
+    esac
+fi
+
 
 echo "Restarting tomcat server..."
 # restart the tomcat server
@@ -20,18 +32,20 @@ sleep 3s
 
 echo "Starting EBs.."
 # run the performance test
-nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW3Factory 200 -OUT data/test.m -RU 60 -MI 600 -RD 60 -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.11:8080/tpcw/" > eb_log.txt &
+nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW2Factory 100 -OUT tune_results_without_apache/shopping_100_default.m -RU 60 -MI 600 -RD 60 -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.11:8080/tpcw/" > eb_log.txt &
 #
 
 echo "EB Command Executed"
 
 echo "Running python script to collect performance numbers"
-## TODO: This can get stuck here if the directory (case_name) already exists because it provieds a prompt
-nohup python3 server_side_metrics.py "ordering_200_tuning_without_apache"> metrics_log.txt &
-#python3 server_side_metrics.py "ordering_200_default_without_apache"
 
-echo "Started running"
+if $TUNE
+then
+    ## TODO: This can get stuck here if the directory (case_name) already exists because it provieds a prompt
+    nohup python3 server_side_metrics.py "$CASE_NAME"> metrics_log.txt &
 
-echo "Starting runing the optimizer"
-# run this if you want to run the tuning
-python3 bayesian_opt.py
+    echo "Starting running the optimizer"
+    python3 bayesian_opt.py
+else
+    python3 server_side_metrics.py "$CASE_NAME"
+fi
