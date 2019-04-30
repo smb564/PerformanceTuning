@@ -1,0 +1,723 @@
+Remote Browser Emulator for TPC-W.
+  ECE 902  Fall '99
+  Version 1.5
+Input command-line arguments
+#  1  -EB
+#  2  rbe.EBTPCW3Factory
+#  3  200
+#  4  -OUT
+#  5  tune_results_without_apache/long_tests/browsing_200_default.m
+#  6  -RU
+#  7  60
+#  8  -MI
+#  9  1800
+# 10  -RD
+# 11  60
+# 12  -ITEM
+# 13  1000
+# 14  -TT
+# 15  0.1
+# 16  -MAXERROR
+# 17  0
+# 18  -WWW
+# 19  http://192.168.32.11:8080/tpcw/
+
+Options
+%      -EB                EB Factory              200 EBs
+         % Factory class used to create EBs.  <class> <#> <factory args...>.
+%     -OUT               Output file tune_results_without_apache/long_tests/browsing_200_default.m
+         % Name of matlab .m output file for results.
+%      -ST Starting time for ramp-up April 29, 2019 3:23:27 PM IST (default)
+         % Time (such as Nov 2, 1999 11:30:00 AM CST) at which to start ramp-up.  Useful for synchronizing multiple RBEs.
+%      -RU              Ramp-up time                   60
+         % Seconds used to warm-up the simulator.
+%      -MI      Measurement interval                 1800
+         % Seconds used for measuring SUT performance.
+%      -RD            Ramp-down time                   60
+         % Seconds of steady-state operation following measurment interval.
+%    -SLOW          Slow-down factor        1.0 (default)
+         % 1000 means one thousand real seconds equals one simulated second.  Accepts factional values and E notation.
+%      -TT Think time multiplication.                  0.1
+         % Used to increase (>1.0) or decrease (<1.0) think time.  In addition to slow-down factor.
+%     -KEY      Interactive control.      false (default)
+         % Require user to hit RETURN before every interaction.  Overrides think time.
+%   -GETIM           Request images.       true (default)
+         % True will cause RBE to request images.  False suppresses image requests.
+%     -CON         Image connections          4 (default)
+         % Maximum number of images downloaded at once.
+%    -CUST       Number of customers       1000 (default)
+         % Number of customers in the database.  Used to generated random CIDs.
+%   -CUSTA              CID NURand A         -1 (default)
+         % Used to generate random CIDs.  See TPC-W Spec. Clause 2.3.2.  -1 means use TPC-W spec. value.
+%    -ITEM           Number of items                 1000
+         % Number of items in the database. Used to generate random searches.
+%   -ITEMA             Item NURand A         -1 (default)
+         % Used to generate random searches.  See TPC-W Spec. Clause 2.10.5.1.  -1 means use TPC-W spec. value.
+%   -DEBUG            Debug message.          0 (default)
+         % Increase this to see more debug messages ~1 to 10.
+% -MAXERROR   Maximum errors allowed.                    0
+         % RBE will terminate after this many errors.  0 implies no limit.
+%     -WWW                  Base URL http://192.168.32.11:8080/tpcw/
+         % The root URL for the TPC-W pages.
+% -MONITOR Do utilization monitoring      false (default)
+         % TRUE=do monitoring, FALSE=Don't do monitoring
+% -INCREMENTAL   Start EBs Incrementally      false (default)
+         % TRUE=do them in increments, FALSE=Do them all at once
+% -JMX_HOST              JMX hostname  localhost (default)
+         % The jmx hostname
+% -JMX_PORT                  JMX port       8081 (default)
+         % The jmx port
+Choose 1023 for -CUSTA.
+Choose 63 for -ITEMA.
+Starting 200 EBs.
+All of the EBs are alive!
+TPCW Ordering Mix EB #60 completed user session.
+TPCW Ordering Mix EB #62 completed user session.
+TPCW Ordering Mix EB #193 completed user session.
+TPCW Ordering Mix EB #156 completed user session.
+TPCW Ordering Mix EB #109 completed user session.
+TPCW Ordering Mix EB #1 completed user session.
+TPCW Ordering Mix EB #136 completed user session.
+TPCW Ordering Mix EB #49 completed user session.
+TPCW Ordering Mix EB #122 completed user session.
+TPCW Ordering Mix EB #11 completed user session.
+TPCW Ordering Mix EB #195 completed user session.
+TPCW Ordering Mix EB #84 completed user session.
+TPCW Ordering Mix EB #100 completed user session.
+TPCW Ordering Mix EB #87 completed user session.
+TPCW Ordering Mix EB #46 completed user session.
+TPCW Ordering Mix EB #105 completed user session.
+TPCW Ordering Mix EB #182 completed user session.
+TPCW Ordering Mix EB #19 completed user session.
+TPCW Ordering Mix EB #169 completed user session.
+TPCW Ordering Mix EB #200 completed user session.
+TPCW Ordering Mix EB #27 completed user session.
+TPCW Ordering Mix EB #110 completed user session.
+TPCW Ordering Mix EB #131 completed user session.
+TPCW Ordering Mix EB #48 completed user session.
+TPCW Ordering Mix EB #76 completed user session.
+TPCW Ordering Mix EB #44 completed user session.
+TPCW Ordering Mix EB #82 completed user session.
+TPCW Ordering Mix EB #167 completed user session.
+TPCW Ordering Mix EB #30 completed user session.
+TPCW Ordering Mix EB #83 completed user session.
+TPCW Ordering Mix EB #69 completed user session.
+TPCW Ordering Mix EB #56 completed user session.
+TPCW Ordering Mix EB #168 completed user session.
+TPCW Ordering Mix EB #75 completed user session.
+TPCW Ordering Mix EB #200 completed user session.
+TPCW Ordering Mix EB #135 completed user session.
+TPCW Ordering Mix EB #16 completed user session.
+TPCW Ordering Mix EB #2 completed user session.
+TPCW Ordering Mix EB #197 completed user session.
+TPCW Ordering Mix EB #161 completed user session.
+TPCW Ordering Mix EB #88 completed user session.
+TPCW Ordering Mix EB #52 completed user session.
+TPCW Ordering Mix EB #200 completed user session.
+TPCW Ordering Mix EB #113 completed user session.
+TPCW Ordering Mix EB #198 completed user session.
+TPCW Ordering Mix EB #87 completed user session.
+TPCW Ordering Mix EB #167 completed user session.
+TPCW Ordering Mix EB #4 completed user session.
+TPCW Ordering Mix EB #156 completed user session.
+TPCW Ordering Mix EB #15 completed user session.
+TPCW Ordering Mix EB #161 completed user session.
+TPCW Ordering Mix EB #6 completed user session.
+TPCW Ordering Mix EB #91 completed user session.
+TPCW Ordering Mix EB #163 completed user session.
+TPCW Ordering Mix EB #106 completed user session.
+Terminating EBs...
+EB TPCW Ordering Mix EB #106commiting suicide!
+EB TPCW Ordering Mix EB #78commiting suicide!
+Thread[TPC-W Emulated Browser 1,5,main]: alive: true
+Thread[TPC-W Emulated Browser 2,5,main]: alive: true
+Thread[TPC-W Emulated Browser 3,5,main]: alive: true
+Thread[TPC-W Emulated Browser 4,5,main]: alive: true
+Thread[TPC-W Emulated Browser 5,5,main]: alive: true
+Thread[TPC-W Emulated Browser 6,5,main]: alive: true
+Thread[TPC-W Emulated Browser 7,5,main]: alive: true
+Thread[TPC-W Emulated Browser 8,5,main]: alive: true
+Thread[TPC-W Emulated Browser 9,5,main]: alive: true
+Thread[TPC-W Emulated Browser 10,5,main]: alive: true
+Thread[TPC-W Emulated Browser 11,5,main]: alive: true
+Thread[TPC-W Emulated Browser 12,5,main]: alive: true
+Thread[TPC-W Emulated Browser 13,5,main]: alive: true
+Thread[TPC-W Emulated Browser 14,5,main]: alive: true
+Thread[TPC-W Emulated Browser 15,5,main]: alive: true
+Thread[TPC-W Emulated Browser 16,5,main]: alive: true
+Thread[TPC-W Emulated Browser 17,5,main]: alive: true
+Thread[TPC-W Emulated Browser 18,5,main]: alive: true
+Thread[TPC-W Emulated Browser 19,5,main]: alive: true
+Thread[TPC-W Emulated Browser 20,5,main]: alive: true
+Thread[TPC-W Emulated Browser 21,5,main]: alive: true
+Thread[TPC-W Emulated Browser 22,5,main]: alive: true
+Thread[TPC-W Emulated Browser 23,5,main]: alive: true
+Thread[TPC-W Emulated Browser 24,5,main]: alive: true
+Thread[TPC-W Emulated Browser 25,5,main]: alive: true
+Thread[TPC-W Emulated Browser 26,5,main]: alive: true
+Thread[TPC-W Emulated Browser 27,5,main]: alive: true
+Thread[TPC-W Emulated Browser 28,5,main]: alive: true
+Thread[TPC-W Emulated Browser 29,5,main]: alive: true
+Thread[TPC-W Emulated Browser 30,5,main]: alive: true
+Thread[TPC-W Emulated Browser 31,5,main]: alive: true
+Thread[TPC-W Emulated Browser 32,5,main]: alive: true
+Thread[TPC-W Emulated Browser 33,5,main]: alive: true
+Thread[TPC-W Emulated Browser 34,5,main]: alive: true
+Thread[TPC-W Emulated Browser 35,5,main]: alive: true
+Thread[TPC-W Emulated Browser 36,5,main]: alive: true
+Thread[TPC-W Emulated Browser 37,5,main]: alive: true
+Thread[TPC-W Emulated Browser 38,5,main]: alive: true
+Thread[TPC-W Emulated Browser 39,5,main]: alive: true
+Thread[TPC-W Emulated Browser 40,5,main]: alive: true
+Thread[TPC-W Emulated Browser 41,5,main]: alive: true
+Thread[TPC-W Emulated Browser 42,5,main]: alive: true
+Thread[TPC-W Emulated Browser 43,5,main]: alive: true
+Thread[TPC-W Emulated Browser 44,5,main]: alive: true
+Thread[TPC-W Emulated Browser 45,5,main]: alive: true
+Thread[TPC-W Emulated Browser 46,5,main]: alive: true
+Thread[TPC-W Emulated Browser 47,5,main]: alive: true
+Thread[TPC-W Emulated Browser 48,5,main]: alive: true
+Thread[TPC-W Emulated Browser 49,5,main]: alive: true
+Thread[TPC-W Emulated Browser 50,5,main]: alive: true
+Thread[TPC-W Emulated Browser 51,5,main]: alive: true
+Thread[TPC-W Emulated Browser 52,5,main]: alive: true
+Thread[TPC-W Emulated Browser 53,5,main]: alive: true
+Thread[TPC-W Emulated Browser 54,5,main]: alive: true
+Thread[TPC-W Emulated Browser 55,5,main]: alive: true
+Thread[TPC-W Emulated Browser 56,5,main]: alive: true
+Thread[TPC-W Emulated Browser 57,5,main]: alive: true
+Thread[TPC-W Emulated Browser 58,5,main]: alive: true
+Thread[TPC-W Emulated Browser 59,5,main]: alive: true
+Thread[TPC-W Emulated Browser 60,5,main]: alive: true
+Thread[TPC-W Emulated Browser 61,5,main]: alive: true
+Thread[TPC-W Emulated Browser 62,5,main]: alive: true
+Thread[TPC-W Emulated Browser 63,5,main]: alive: true
+Thread[TPC-W Emulated Browser 64,5,main]: alive: true
+Thread[TPC-W Emulated Browser 65,5,main]: alive: true
+Thread[TPC-W Emulated Browser 66,5,main]: alive: true
+Thread[TPC-W Emulated Browser 67,5,main]: alive: true
+Thread[TPC-W Emulated Browser 68,5,main]: alive: true
+Thread[TPC-W Emulated Browser 69,5,main]: alive: true
+Thread[TPC-W Emulated Browser 70,5,main]: alive: true
+Thread[TPC-W Emulated Browser 71,5,main]: alive: true
+Thread[TPC-W Emulated Browser 72,5,main]: alive: true
+Thread[TPC-W Emulated Browser 73,5,main]: alive: true
+Thread[TPC-W Emulated Browser 74,5,main]: alive: true
+Thread[TPC-W Emulated Browser 75,5,main]: alive: true
+Thread[TPC-W Emulated Browser 76,5,main]: alive: true
+Thread[TPC-W Emulated Browser 77,5,main]: alive: true
+Thread[TPC-W Emulated Browser 78,5,]: alive: false
+Thread[TPC-W Emulated Browser 79,5,main]: alive: true
+Thread[TPC-W Emulated Browser 80,5,main]: alive: true
+Thread[TPC-W Emulated Browser 81,5,main]: alive: true
+Thread[TPC-W Emulated Browser 82,5,main]: alive: true
+Thread[TPC-W Emulated Browser 83,5,main]: alive: true
+Thread[TPC-W Emulated Browser 84,5,main]: alive: true
+Thread[TPC-W Emulated Browser 85,5,main]: alive: true
+Thread[TPC-W Emulated Browser 86,5,main]: alive: true
+Thread[TPC-W Emulated Browser 87,5,main]: alive: true
+Thread[TPC-W Emulated Browser 88,5,main]: alive: true
+Thread[TPC-W Emulated Browser 89,5,main]: alive: true
+Thread[TPC-W Emulated Browser 90,5,main]: alive: true
+Thread[TPC-W Emulated Browser 91,5,main]: alive: true
+Thread[TPC-W Emulated Browser 92,5,main]: alive: true
+Thread[TPC-W Emulated Browser 93,5,main]: alive: true
+Thread[TPC-W Emulated Browser 94,5,main]: alive: true
+Thread[TPC-W Emulated Browser 95,5,main]: alive: true
+Thread[TPC-W Emulated Browser 96,5,main]: alive: true
+Thread[TPC-W Emulated Browser 97,5,main]: alive: true
+Thread[TPC-W Emulated Browser 98,5,main]: alive: true
+Thread[TPC-W Emulated Browser 99,5,main]: alive: true
+Thread[TPC-W Emulated Browser 100,5,main]: alive: true
+Thread[TPC-W Emulated Browser 101,5,main]: alive: true
+Thread[TPC-W Emulated Browser 102,5,main]: alive: true
+Thread[TPC-W Emulated Browser 103,5,main]: alive: true
+Thread[TPC-W Emulated Browser 104,5,main]: alive: true
+Thread[TPC-W Emulated Browser 105,5,main]: alive: true
+Thread[TPC-W Emulated Browser 106,5,]: alive: false
+Thread[TPC-W Emulated Browser 107,5,main]: alive: true
+Thread[TPC-W Emulated Browser 108,5,main]: alive: true
+Thread[TPC-W Emulated Browser 109,5,main]: alive: true
+Thread[TPC-W Emulated Browser 110,5,main]: alive: true
+Thread[TPC-W Emulated Browser 111,5,main]: alive: true
+Thread[TPC-W Emulated Browser 112,5,main]: alive: true
+Thread[TPC-W Emulated Browser 113,5,main]: alive: true
+Thread[TPC-W Emulated Browser 114,5,main]: alive: true
+Thread[TPC-W Emulated Browser 115,5,main]: alive: true
+Thread[TPC-W Emulated Browser 116,5,main]: alive: true
+Thread[TPC-W Emulated Browser 117,5,main]: alive: true
+Thread[TPC-W Emulated Browser 118,5,main]: alive: true
+Thread[TPC-W Emulated Browser 119,5,main]: alive: true
+Thread[TPC-W Emulated Browser 120,5,main]: alive: true
+Thread[TPC-W Emulated Browser 121,5,main]: alive: true
+Thread[TPC-W Emulated Browser 122,5,main]: alive: true
+Thread[TPC-W Emulated Browser 123,5,main]: alive: true
+Thread[TPC-W Emulated Browser 124,5,main]: alive: true
+Thread[TPC-W Emulated Browser 125,5,main]: alive: true
+Thread[TPC-W Emulated Browser 126,5,main]: alive: true
+Thread[TPC-W Emulated Browser 127,5,main]: alive: true
+Thread[TPC-W Emulated Browser 128,5,main]: alive: true
+Thread[TPC-W Emulated Browser 129,5,main]: alive: true
+Thread[TPC-W Emulated Browser 130,5,main]: alive: true
+Thread[TPC-W Emulated Browser 131,5,main]: alive: true
+Thread[TPC-W Emulated Browser 132,5,main]: alive: true
+Thread[TPC-W Emulated Browser 133,5,main]: alive: true
+Thread[TPC-W Emulated Browser 134,5,main]: alive: true
+Thread[TPC-W Emulated Browser 135,5,main]: alive: true
+Thread[TPC-W Emulated Browser 136,5,main]: alive: true
+Thread[TPC-W Emulated Browser 137,5,main]: alive: true
+Thread[TPC-W Emulated Browser 138,5,main]: alive: true
+Thread[TPC-W Emulated Browser 139,5,main]: alive: true
+Thread[TPC-W Emulated Browser 140,5,main]: alive: true
+Thread[TPC-W Emulated Browser 141,5,main]: alive: true
+Thread[TPC-W Emulated Browser 142,5,main]: alive: true
+Thread[TPC-W Emulated Browser 143,5,main]: alive: true
+Thread[TPC-W Emulated Browser 144,5,main]: alive: true
+Thread[TPC-W Emulated Browser 145,5,main]: alive: true
+Thread[TPC-W Emulated Browser 146,5,main]: alive: true
+Thread[TPC-W Emulated Browser 147,5,main]: alive: true
+Thread[TPC-W Emulated Browser 148,5,main]: alive: true
+Thread[TPC-W Emulated Browser 149,5,main]: alive: true
+Thread[TPC-W Emulated Browser 150,5,main]: alive: true
+Thread[TPC-W Emulated Browser 151,5,main]: alive: true
+Thread[TPC-W Emulated Browser 152,5,main]: alive: true
+Thread[TPC-W Emulated Browser 153,5,main]: alive: true
+Thread[TPC-W Emulated Browser 154,5,main]: alive: true
+Thread[TPC-W Emulated Browser 155,5,main]: alive: true
+Thread[TPC-W Emulated Browser 156,5,main]: alive: true
+Thread[TPC-W Emulated Browser 157,5,main]: alive: true
+Thread[TPC-W Emulated Browser 158,5,main]: alive: true
+Thread[TPC-W Emulated Browser 159,5,main]: alive: true
+Thread[TPC-W Emulated Browser 160,5,main]: alive: true
+Thread[TPC-W Emulated Browser 161,5,main]: alive: true
+Thread[TPC-W Emulated Browser 162,5,main]: alive: true
+Thread[TPC-W Emulated Browser 163,5,main]: alive: true
+Thread[TPC-W Emulated Browser 164,5,main]: alive: true
+Thread[TPC-W Emulated Browser 165,5,main]: alive: true
+Thread[TPC-W Emulated Browser 166,5,main]: alive: true
+Thread[TPC-W Emulated Browser 167,5,main]: alive: true
+Thread[TPC-W Emulated Browser 168,5,main]: alive: true
+Thread[TPC-W Emulated Browser 169,5,main]: alive: true
+Thread[TPC-W Emulated Browser 170,5,main]: alive: true
+Thread[TPC-W Emulated Browser 171,5,main]: alive: true
+Thread[TPC-W Emulated Browser 172,5,main]: alive: true
+Thread[TPC-W Emulated Browser 173,5,main]: alive: true
+Thread[TPC-W Emulated Browser 174,5,main]: alive: true
+Thread[TPC-W Emulated Browser 175,5,main]: alive: true
+Thread[TPC-W Emulated Browser 176,5,main]: alive: true
+Thread[TPC-W Emulated Browser 177,5,main]: alive: true
+Thread[TPC-W Emulated Browser 178,5,main]: alive: true
+Thread[TPC-W Emulated Browser 179,5,main]: alive: true
+Thread[TPC-W Emulated Browser 180,5,main]: alive: true
+Thread[TPC-W Emulated Browser 181,5,main]: alive: true
+Thread[TPC-W Emulated Browser 182,5,main]: alive: true
+Thread[TPC-W Emulated Browser 183,5,main]: alive: true
+Thread[TPC-W Emulated Browser 184,5,main]: alive: true
+Thread[TPC-W Emulated Browser 185,5,main]: alive: true
+Thread[TPC-W Emulated Browser 186,5,main]: alive: true
+Thread[TPC-W Emulated Browser 187,5,main]: alive: true
+Thread[TPC-W Emulated Browser 188,5,main]: alive: true
+Thread[TPC-W Emulated Browser 189,5,main]: alive: true
+Thread[TPC-W Emulated Browser 190,5,main]: alive: true
+Thread[TPC-W Emulated Browser 191,5,main]: alive: true
+Thread[TPC-W Emulated Browser 192,5,main]: alive: true
+Thread[TPC-W Emulated Browser 193,5,main]: alive: true
+Thread[TPC-W Emulated Browser 194,5,main]: alive: true
+Thread[TPC-W Emulated Browser 195,5,main]: alive: true
+Thread[TPC-W Emulated Browser 196,5,main]: alive: true
+Thread[TPC-W Emulated Browser 197,5,main]: alive: true
+Thread[TPC-W Emulated Browser 198,5,main]: alive: true
+Thread[TPC-W Emulated Browser 199,5,main]: alive: true
+Thread[TPC-W Emulated Browser 200,5,main]: alive: true
+main thread: About to interrupt: 0
+EB TPCW Ordering Mix EB #12commiting suicide!
+EB TPCW Ordering Mix EB #132commiting suicide!
+EB TPCW Ordering Mix EB #176commiting suicide!
+EB TPCW Ordering Mix EB #3commiting suicide!
+EB TPCW Ordering Mix EB #62commiting suicide!
+EB TPCW Ordering Mix EB #53commiting suicide!
+EB TPCW Ordering Mix EB #189commiting suicide!
+EB TPCW Ordering Mix EB #158commiting suicide!
+EB TPCW Ordering Mix EB #200commiting suicide!
+EB TPCW Ordering Mix EB #140commiting suicide!
+EB TPCW Ordering Mix EB #65commiting suicide!
+EB TPCW Ordering Mix EB #155commiting suicide!
+EB TPCW Ordering Mix EB #96commiting suicide!
+EB TPCW Ordering Mix EB #93commiting suicide!
+EB TPCW Ordering Mix EB #156commiting suicide!
+EB TPCW Ordering Mix EB #99commiting suicide!
+EB TPCW Ordering Mix EB #34commiting suicide!
+EB TPCW Ordering Mix EB #191commiting suicide!
+EB TPCW Ordering Mix EB #25commiting suicide!
+EB TPCW Ordering Mix EB #48commiting suicide!
+EB TPCW Ordering Mix EB #107commiting suicide!
+EB TPCW Ordering Mix EB #13commiting suicide!
+EB TPCW Ordering Mix EB #152commiting suicide!
+EB TPCW Ordering Mix EB #75commiting suicide!
+EB TPCW Ordering Mix EB #23commiting suicide!
+EB TPCW Ordering Mix EB #163commiting suicide!
+EB TPCW Ordering Mix EB #83commiting suicide!
+EB TPCW Ordering Mix EB #170commiting suicide!
+EB TPCW Ordering Mix EB #154commiting suicide!
+EB TPCW Ordering Mix EB #43commiting suicide!
+EB TPCW Ordering Mix EB #38commiting suicide!
+EB TPCW Ordering Mix EB #108commiting suicide!
+EB TPCW Ordering Mix EB #16commiting suicide!
+EB TPCW Ordering Mix EB #199commiting suicide!
+EB TPCW Ordering Mix EB #30commiting suicide!
+EB TPCW Ordering Mix EB #97commiting suicide!
+EB TPCW Ordering Mix EB #195commiting suicide!
+main thread: About to interrupt: 1
+EB TPCW Ordering Mix EB #37commiting suicide!
+EB TPCW Ordering Mix EB #6commiting suicide!
+EB TPCW Ordering Mix EB #49commiting suicide!
+EB TPCW Ordering Mix EB #104commiting suicide!
+EB TPCW Ordering Mix EB #117commiting suicide!
+EB TPCW Ordering Mix EB #72commiting suicide!
+EB TPCW Ordering Mix EB #91commiting suicide!
+EB TPCW Ordering Mix EB #45commiting suicide!
+EB TPCW Ordering Mix EB #145commiting suicide!
+EB TPCW Ordering Mix EB #101commiting suicide!
+EB TPCW Ordering Mix EB #63commiting suicide!
+EB TPCW Ordering Mix EB #98commiting suicide!
+EB TPCW Ordering Mix EB #94commiting suicide!
+EB TPCW Ordering Mix EB #115commiting suicide!
+EB TPCW Ordering Mix EB #123commiting suicide!
+EB TPCW Ordering Mix EB #7commiting suicide!
+EB TPCW Ordering Mix EB #137commiting suicide!
+EB TPCW Ordering Mix EB #186commiting suicide!
+EB TPCW Ordering Mix EB #164commiting suicide!
+EB TPCW Ordering Mix EB #190commiting suicide!
+EB TPCW Ordering Mix EB #69commiting suicide!
+EB TPCW Ordering Mix EB #129commiting suicide!
+EB TPCW Ordering Mix EB #110commiting suicide!
+EB TPCW Ordering Mix EB #194commiting suicide!
+EB TPCW Ordering Mix EB #188commiting suicide!
+EB TPCW Ordering Mix EB #58commiting suicide!
+EB TPCW Ordering Mix EB #76commiting suicide!
+EB TPCW Ordering Mix EB #20commiting suicide!
+EB TPCW Ordering Mix EB #87commiting suicide!
+EB TPCW Ordering Mix EB #66commiting suicide!
+EB TPCW Ordering Mix EB #85commiting suicide!
+EB TPCW Ordering Mix EB #54commiting suicide!
+EB TPCW Ordering Mix EB #136commiting suicide!
+EB TPCW Ordering Mix EB #174commiting suicide!
+EB TPCW Ordering Mix EB #179commiting suicide!
+EB TPCW Ordering Mix EB #21commiting suicide!
+EB TPCW Ordering Mix EB #61commiting suicide!
+EB TPCW Ordering Mix EB #4commiting suicide!
+EB TPCW Ordering Mix EB #35commiting suicide!
+EB TPCW Ordering Mix EB #84commiting suicide!
+EB TPCW Ordering Mix EB #42commiting suicide!
+EB TPCW Ordering Mix EB #17commiting suicide!
+EB TPCW Ordering Mix EB #131commiting suicide!
+EB TPCW Ordering Mix EB #24commiting suicide!
+EB TPCW Ordering Mix EB #79commiting suicide!
+EB TPCW Ordering Mix EB #105commiting suicide!
+EB TPCW Ordering Mix EB #71commiting suicide!
+EB TPCW Ordering Mix EB #51commiting suicide!
+EB TPCW Ordering Mix EB #177commiting suicide!
+EB TPCW Ordering Mix EB #14commiting suicide!
+EB TPCW Ordering Mix EB #47commiting suicide!
+EB TPCW Ordering Mix EB #33commiting suicide!
+EB TPCW Ordering Mix EB #168commiting suicide!
+EB TPCW Ordering Mix EB #161commiting suicide!
+EB TPCW Ordering Mix EB #55commiting suicide!
+EB TPCW Ordering Mix EB #180commiting suicide!
+EB TPCW Ordering Mix EB #126commiting suicide!
+EB TPCW Ordering Mix EB #171commiting suicide!
+EB TPCW Ordering Mix EB #143commiting suicide!
+EB TPCW Ordering Mix EB #73commiting suicide!
+EB TPCW Ordering Mix EB #139commiting suicide!
+EB TPCW Ordering Mix EB #124commiting suicide!
+EB TPCW Ordering Mix EB #59commiting suicide!
+EB TPCW Ordering Mix EB #127commiting suicide!
+EB TPCW Ordering Mix EB #113commiting suicide!
+EB TPCW Ordering Mix EB #181commiting suicide!
+EB TPCW Ordering Mix EB #165commiting suicide!
+EB TPCW Ordering Mix EB #9commiting suicide!
+EB TPCW Ordering Mix EB #29commiting suicide!
+EB TPCW Ordering Mix EB #135commiting suicide!
+EB TPCW Ordering Mix EB #119commiting suicide!
+EB TPCW Ordering Mix EB #134commiting suicide!
+EB TPCW Ordering Mix EB #19commiting suicide!
+EB TPCW Ordering Mix EB #159commiting suicide!
+EB TPCW Ordering Mix EB #32commiting suicide!
+EB TPCW Ordering Mix EB #36commiting suicide!
+EB TPCW Ordering Mix EB #56commiting suicide!
+EB TPCW Ordering Mix EB #10commiting suicide!
+EB TPCW Ordering Mix EB #74commiting suicide!
+EB TPCW Ordering Mix EB #130commiting suicide!
+EB TPCW Ordering Mix EB #175commiting suicide!
+EB TPCW Ordering Mix EB #67commiting suicide!
+EB TPCW Ordering Mix EB #81commiting suicide!
+EB TPCW Ordering Mix EB #144commiting suicide!
+EB TPCW Ordering Mix EB #185commiting suicide!
+EB TPCW Ordering Mix EB #15commiting suicide!
+EB TPCW Ordering Mix EB #5commiting suicide!
+EB TPCW Ordering Mix EB #90commiting suicide!
+EB TPCW Ordering Mix EB #150commiting suicide!
+EB TPCW Ordering Mix EB #198commiting suicide!
+EB TPCW Ordering Mix EB #80commiting suicide!
+EB TPCW Ordering Mix EB #187commiting suicide!
+EB TPCW Ordering Mix EB #157commiting suicide!
+EB TPCW Ordering Mix EB #172commiting suicide!
+EB TPCW Ordering Mix EB #100commiting suicide!
+EB TPCW Ordering Mix EB #27commiting suicide!
+EB TPCW Ordering Mix EB #122commiting suicide!
+EB TPCW Ordering Mix EB #77commiting suicide!
+EB TPCW Ordering Mix EB #118commiting suicide!
+EB TPCW Ordering Mix EB #60commiting suicide!
+EB TPCW Ordering Mix EB #26commiting suicide!
+EB TPCW Ordering Mix EB #133commiting suicide!
+EB TPCW Ordering Mix EB #112commiting suicide!
+EB TPCW Ordering Mix EB #192commiting suicide!
+EB TPCW Ordering Mix EB #114commiting suicide!
+EB TPCW Ordering Mix EB #197commiting suicide!
+EB TPCW Ordering Mix EB #120commiting suicide!
+EB TPCW Ordering Mix EB #116commiting suicide!
+EB TPCW Ordering Mix EB #41commiting suicide!
+EB TPCW Ordering Mix EB #138commiting suicide!
+EB TPCW Ordering Mix EB #8commiting suicide!
+EB TPCW Ordering Mix EB #111commiting suicide!
+EB TPCW Ordering Mix EB #46commiting suicide!
+EB TPCW Ordering Mix EB #92commiting suicide!
+EB TPCW Ordering Mix EB #11commiting suicide!
+EB TPCW Ordering Mix EB #141commiting suicide!
+EB TPCW Ordering Mix EB #89commiting suicide!
+EB TPCW Ordering Mix EB #151commiting suicide!
+EB TPCW Ordering Mix EB #166commiting suicide!
+EB TPCW Ordering Mix EB #44commiting suicide!
+EB TPCW Ordering Mix EB #31commiting suicide!
+EB TPCW Ordering Mix EB #184commiting suicide!
+EB TPCW Ordering Mix EB #148commiting suicide!
+EB TPCW Ordering Mix EB #40commiting suicide!
+EB TPCW Ordering Mix EB #64commiting suicide!
+EB TPCW Ordering Mix EB #109commiting suicide!
+EB TPCW Ordering Mix EB #22commiting suicide!
+main thread: About to interrupt: 2
+main thread: About to interrupt: 3
+main thread: About to interrupt: 4
+main thread: About to interrupt: 5
+main thread: About to interrupt: 6
+main thread: About to interrupt: 7
+main thread: About to interrupt: 8
+main thread: About to interrupt: 9
+main thread: About to interrupt: 10
+main thread: About to interrupt: 11
+main thread: About to interrupt: 12
+main thread: About to interrupt: 13
+main thread: About to interrupt: 14
+main thread: About to interrupt: 15
+main thread: About to interrupt: 16
+main thread: About to interrupt: 17
+EB TPCW Ordering Mix EB #193commiting suicide!
+EB TPCW Ordering Mix EB #52commiting suicide!
+EB TPCW Ordering Mix EB #57commiting suicide!
+EB TPCW Ordering Mix EB #173commiting suicide!
+EB TPCW Ordering Mix EB #178commiting suicide!
+EB TPCW Ordering Mix EB #160commiting suicide!
+EB TPCW Ordering Mix EB #121commiting suicide!
+EB TPCW Ordering Mix EB #88commiting suicide!
+EB TPCW Ordering Mix EB #86commiting suicide!
+EB TPCW Ordering Mix EB #162commiting suicide!
+EB TPCW Ordering Mix EB #50commiting suicide!
+EB TPCW Ordering Mix EB #182commiting suicide!
+EB TPCW Ordering Mix EB #167commiting suicide!
+main thread: About to interrupt: 18
+main thread: About to interrupt: 19
+main thread: About to interrupt: 20
+main thread: About to interrupt: 21
+main thread: About to interrupt: 22
+main thread: About to interrupt: 23
+main thread: About to interrupt: 24
+main thread: About to interrupt: 25
+main thread: About to interrupt: 26
+main thread: About to interrupt: 27
+EB TPCW Ordering Mix EB #68commiting suicide!
+EB TPCW Ordering Mix EB #153commiting suicide!
+EB TPCW Ordering Mix EB #70commiting suicide!
+main thread: About to interrupt: 28
+main thread: About to interrupt: 29
+main thread: About to interrupt: 30
+main thread: About to interrupt: 31
+main thread: About to interrupt: 32
+main thread: About to interrupt: 33
+main thread: About to interrupt: 34
+main thread: About to interrupt: 35
+main thread: About to interrupt: 36
+main thread: About to interrupt: 37
+main thread: About to interrupt: 38
+EB TPCW Ordering Mix EB #142commiting suicide!
+EB TPCW Ordering Mix EB #82commiting suicide!
+EB TPCW Ordering Mix EB #125commiting suicide!
+EB TPCW Ordering Mix EB #102commiting suicide!
+EB TPCW Ordering Mix EB #147commiting suicide!
+EB TPCW Ordering Mix EB #95commiting suicide!
+EB TPCW Ordering Mix EB #146commiting suicide!
+EB TPCW Ordering Mix EB #103commiting suicide!
+EB TPCW Ordering Mix EB #183commiting suicide!
+EB TPCW Ordering Mix EB #196commiting suicide!
+main thread: About to interrupt: 39
+main thread: About to interrupt: 40
+main thread: About to interrupt: 41
+main thread: About to interrupt: 42
+main thread: About to interrupt: 43
+main thread: About to interrupt: 44
+main thread: About to interrupt: 45
+main thread: About to interrupt: 46
+main thread: About to interrupt: 47
+main thread: About to interrupt: 48
+main thread: About to interrupt: 49
+main thread: About to interrupt: 50
+main thread: About to interrupt: 51
+main thread: About to interrupt: 52
+main thread: About to interrupt: 53
+main thread: About to interrupt: 54
+main thread: About to interrupt: 55
+main thread: About to interrupt: 56
+main thread: About to interrupt: 57
+main thread: About to interrupt: 58
+main thread: About to interrupt: 59
+main thread: About to interrupt: 60
+main thread: About to interrupt: 61
+main thread: About to interrupt: 62
+main thread: About to interrupt: 63
+main thread: About to interrupt: 64
+main thread: About to interrupt: 65
+main thread: About to interrupt: 66
+main thread: About to interrupt: 67
+main thread: About to interrupt: 68
+main thread: About to interrupt: 69
+main thread: About to interrupt: 70
+main thread: About to interrupt: 71
+main thread: About to interrupt: 72
+main thread: About to interrupt: 73
+main thread: About to interrupt: 74
+main thread: About to interrupt: 75
+main thread: About to interrupt: 76
+main thread: About to interrupt: 77
+main thread: About to interrupt: 78
+main thread: About to interrupt: 79
+main thread: About to interrupt: 80
+main thread: About to interrupt: 81
+main thread: About to interrupt: 82
+main thread: About to interrupt: 83
+main thread: About to interrupt: 84
+main thread: About to interrupt: 85
+main thread: About to interrupt: 86
+main thread: About to interrupt: 87
+main thread: About to interrupt: 88
+main thread: About to interrupt: 89
+main thread: About to interrupt: 90
+main thread: About to interrupt: 91
+main thread: About to interrupt: 92
+main thread: About to interrupt: 93
+main thread: About to interrupt: 94
+main thread: About to interrupt: 95
+main thread: About to interrupt: 96
+main thread: About to interrupt: 97
+main thread: About to interrupt: 98
+main thread: About to interrupt: 99
+main thread: About to interrupt: 100
+main thread: About to interrupt: 101
+main thread: About to interrupt: 102
+main thread: About to interrupt: 103
+main thread: About to interrupt: 104
+main thread: About to interrupt: 105
+main thread: About to interrupt: 106
+main thread: About to interrupt: 107
+main thread: About to interrupt: 108
+main thread: About to interrupt: 109
+main thread: About to interrupt: 110
+main thread: About to interrupt: 111
+main thread: About to interrupt: 112
+main thread: About to interrupt: 113
+main thread: About to interrupt: 114
+main thread: About to interrupt: 115
+main thread: About to interrupt: 116
+main thread: About to interrupt: 117
+main thread: About to interrupt: 118
+main thread: About to interrupt: 119
+main thread: About to interrupt: 120
+main thread: About to interrupt: 121
+main thread: About to interrupt: 122
+main thread: About to interrupt: 123
+main thread: About to interrupt: 124
+main thread: About to interrupt: 125
+main thread: About to interrupt: 126
+main thread: About to interrupt: 127
+main thread: About to interrupt: 128
+main thread: About to interrupt: 129
+main thread: About to interrupt: 130
+main thread: About to interrupt: 131
+main thread: About to interrupt: 132
+main thread: About to interrupt: 133
+main thread: About to interrupt: 134
+main thread: About to interrupt: 135
+main thread: About to interrupt: 136
+main thread: About to interrupt: 137
+main thread: About to interrupt: 138
+main thread: About to interrupt: 139
+main thread: About to interrupt: 140
+main thread: About to interrupt: 141
+main thread: About to interrupt: 142
+main thread: About to interrupt: 143
+main thread: About to interrupt: 144
+main thread: About to interrupt: 145
+main thread: About to interrupt: 146
+main thread: About to interrupt: 147
+main thread: About to interrupt: 148
+main thread: About to interrupt: 149
+main thread: About to interrupt: 150
+main thread: About to interrupt: 151
+main thread: About to interrupt: 152
+main thread: About to interrupt: 153
+main thread: About to interrupt: 154
+main thread: About to interrupt: 155
+main thread: About to interrupt: 156
+main thread: About to interrupt: 157
+main thread: About to interrupt: 158
+main thread: About to interrupt: 159
+main thread: About to interrupt: 160
+main thread: About to interrupt: 161
+main thread: About to interrupt: 162
+main thread: About to interrupt: 163
+main thread: About to interrupt: 164
+main thread: About to interrupt: 165
+main thread: About to interrupt: 166
+main thread: About to interrupt: 167
+main thread: About to interrupt: 168
+main thread: About to interrupt: 169
+main thread: About to interrupt: 170
+main thread: About to interrupt: 171
+main thread: About to interrupt: 172
+main thread: About to interrupt: 173
+main thread: About to interrupt: 174
+main thread: About to interrupt: 175
+main thread: About to interrupt: 176
+main thread: About to interrupt: 177
+main thread: About to interrupt: 178
+main thread: About to interrupt: 179
+main thread: About to interrupt: 180
+main thread: About to interrupt: 181
+main thread: About to interrupt: 182
+main thread: About to interrupt: 183
+main thread: About to interrupt: 184
+main thread: About to interrupt: 185
+main thread: About to interrupt: 186
+main thread: About to interrupt: 187
+main thread: About to interrupt: 188
+main thread: About to interrupt: 189
+main thread: About to interrupt: 190
+main thread: About to interrupt: 191
+main thread: About to interrupt: 192
+main thread: About to interrupt: 193
+main thread: About to interrupt: 194
+main thread: About to interrupt: 195
+main thread: About to interrupt: 196
+main thread: About to interrupt: 197
+main thread: About to interrupt: 198
+main thread: About to interrupt: 199
+EBs finished.
+Really finishing RBE!.

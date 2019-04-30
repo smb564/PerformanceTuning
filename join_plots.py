@@ -16,7 +16,7 @@ def get_data(case):
     mean_latency = []
     threads = []
 
-    # read throughputs, latencies and threads
+    # read throughputs, latencies and threadsrun
     with open(dir + "data.csv") as f:
         reader = csv.reader(f)
         # skip the header of the csv
@@ -30,9 +30,9 @@ def get_data(case):
     return [throughput, mean_latency, threads, duration, interval, tuning_interval]
 
 
-case_name = "browsing_200_default_tuning"  # to make the folder name
-case1 = "browsing_200_default_without_apache"
-case2 = "browsing_200_tuning_without_apache"
+case_name = "browsing_200_long_default_tuning_without_apache"  # to make the folder name
+case1 = "browsing_200_long_default_without_apache"
+case2 = "browsing_200_long_tuning_without_apache"
 
 data1 = get_data(case1)
 data2 = get_data(case2)

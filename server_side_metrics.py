@@ -16,8 +16,8 @@ try:
     os.makedirs("server_metrics/"+case_name)
 except FileExistsError:
     print("directory already exists")
-    if input("are you sure want to go ahead (Y/n)?") == "n":
-        exit()
+    # if input("are you sure want to go ahead (Y/n)?") == "n":
+    #     exit()
 
 out_filename = "server_metrics/" + case_name + "/data.csv"
 

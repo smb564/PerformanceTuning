@@ -8,6 +8,7 @@ import csv
 
 data = []
 param_history = []
+test_duration = 60+60+1800
 tuning_interval = 60  # in seconds
 
 # query and get the current thread pool size (assuming fixed thread pool)
@@ -39,7 +40,7 @@ def objective(x):
 
 space = hp.uniform('x', 20, 600)
 tpe_trials = Trials()
-tpe_best = fmin(fn=objective, space=space, algo=tpe.suggest, trials=tpe_trials, max_evals=12)
+tpe_best = fmin(fn=objective, space=space, algo=tpe.suggest, trials=tpe_trials, max_evals=test_duration//tuning_interval)
 
 
 with open("tuner_results/results.csv", "w") as f:

@@ -2,7 +2,7 @@
 source venv/bin/activate
 
 TUNE=false
-CASE_NAME="shopping_100_tuning_without_apache"
+CASE_NAME="browsing_200_long_default_without_apache"
 
 if [[ -d "server_metrics/$CASE_NAME" ]]
 then
@@ -32,7 +32,7 @@ sleep 3s
 
 echo "Starting EBs.."
 # run the performance test
-nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW2Factory 100 -OUT tune_results_without_apache/shopping_100_default.m -RU 60 -MI 600 -RD 60 -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.11:8080/tpcw/" > eb_log.txt &
+nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW3Factory 200 -OUT tune_results_without_apache/long_tests/browsing_200_default.m -RU 60 -MI 1800 -RD 60 -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.11:8080/tpcw/" > eb_log.txt &
 #
 
 echo "EB Command Executed"
@@ -41,7 +41,6 @@ echo "Running python script to collect performance numbers"
 
 if $TUNE
 then
-    ## TODO: This can get stuck here if the directory (case_name) already exists because it provieds a prompt
     nohup python3 server_side_metrics.py "$CASE_NAME"> metrics_log.txt &
 
     echo "Starting running the optimizer"
