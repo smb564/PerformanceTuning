@@ -37,13 +37,6 @@ iterations = int(duration/interval)
 
 tuning_interval = -1  # in seconds (from bayesian_opt.py), -1 if not tuning TODO: Set the correct value every time
 
-# save the configurations in a file
-with open(folder_name + case_name + "/params.csv", "w") as f:
-    writer = csv.writer(f)
-    writer.writerow(["duration (seconds)", duration])
-    writer.writerow(["measuring interval (seconds)", interval])
-    writer.writerow(["tuning interval (seconds)", tuning_interval])
-
 # server is returning total request count
 
 prev = requests.get("http://192.168.32.1:8080/performance").json()[1]
@@ -59,6 +52,16 @@ for _ in range(iterations):
 
     # get the current thread pool size as well
     threads.append(requests.get("http://192.168.32.1:8080/getparam?name=poolSize").json())
+
+# save the configurations and average numbers in a file
+with open(folder_name + case_name + "/test_notes.csv", "w") as f:
+    writer = csv.writer(f)
+    writer.writerow(["duration (seconds)", duration])
+    writer.writerow(["measuring interval (seconds)", interval])
+    writer.writerow(["tuning interval (seconds)", tuning_interval])
+    writer.writerow(["average throughput (req/sec)", sum(throughput)/len(throughput)]) # TODO: This is not the correct number, should get the total count and divide by total time
+    writer.writerow(["average latency (ms)", sum(mean_latency)/len(mean_latency)]) # TODO: this is avearge of 1 minute window latencies
+
 
 # save the data
 with open(out_filename, "w") as f:
