@@ -7,6 +7,7 @@ CASE_NAME="browsing_100_tuning_both"
 RU="60"
 MI="1800"
 RD="60"
+CONCURRENCY="100"
 
 # Parameters are tuned this often
 TUNING_INTERVAL="120"
@@ -14,7 +15,7 @@ TUNING_INTERVAL="120"
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
 
-if [[ -d "tuning_both/$CASE_NAME" ]]
+if [[ -d "$FOLDER_NAME/$CASE_NAME" ]]
 then
     read -p "Directory already exists. Replace? (Y/n)" yn
     case $yn in
@@ -43,7 +44,10 @@ sleep 3s
 
 echo "Starting EBs.."
 # run the performance test
-nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW1Factory 100 -OUT tuning_both/browsing_100.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.10:80/tpcw/" > eb_log.txt &
+
+# create folder
+ssh wso2@192.168.32.6 "cd supun/dist && mkdir $FOLDER_NAME"
+nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW1Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.10:80/tpcw/" > eb_log.txt &
 #
 
 echo "EB Command Executed"
