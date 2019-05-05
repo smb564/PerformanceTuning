@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
+MODEL="mpm_event"
 FOLDER_NAME="apache_max_clients"
 CASE_NAME="browsing_worker_"
 RU="60"
@@ -19,6 +20,9 @@ then
         * ) exit;;
     esac
 fi
+
+# set the required mpm module
+curl 192.168.32.10:5001/setModel?model=${MODEL}
 
 ssh wso2@192.168.32.6 "cd supun/dist && mkdir $FOLDER_NAME"
 
