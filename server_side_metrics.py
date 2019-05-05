@@ -9,22 +9,28 @@ throughput = []
 mean_latency = []
 threads = []
 
+folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
+
 # case_name = "shopping_200_tuning_without_apache"
-case_name = sys.argv[1]
+case_name = sys.argv[2]
+ru = int(sys.argv[3])
+mi = int(sys.argv[4])
+rd = int(sys.argv[5])
+measuring_interval = int(sys.argv[6])
 
 try:
-    os.makedirs("server_metrics/"+case_name)
+    os.makedirs(folder_name+case_name)
 except FileExistsError:
     print("directory already exists")
     # if input("are you sure want to go ahead (Y/n)?") == "n":
     #     exit()
 
-out_filename = "server_metrics/" + case_name + "/data.csv"
+out_filename = folder_name + case_name + "/data.csv"
 
 # duration in seconds
-duration = 720
+duration = ru+mi+rd
 # interval in seconds
-interval = 20
+interval = measuring_interval
 
 # calculate the iterations from duration/interval
 iterations = int(duration/interval)
@@ -32,7 +38,7 @@ iterations = int(duration/interval)
 tuning_interval = -1  # in seconds (from bayesian_opt.py), -1 if not tuning TODO: Set the correct value every time
 
 # save the configurations in a file
-with open("server_metrics/" + case_name + "/params.csv", "w") as f:
+with open(folder_name + case_name + "/params.csv", "w") as f:
     writer = csv.writer(f)
     writer.writerow(["duration (seconds)", duration])
     writer.writerow(["measuring interval (seconds)", interval])
@@ -74,7 +80,7 @@ if tuning_interval != -1:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("server side throughput (req/seq) (20 seconds window)")
 plt.xlabel("time (seconds)")
-plt.savefig("server_metrics/" + case_name + "/throughput.png", bbox_inches="tight")
+plt.savefig(folder_name + case_name + "/throughput.png", bbox_inches="tight")
 plt.clf()
 
 plt.plot(x_axis, mean_latency)
@@ -83,7 +89,7 @@ if tuning_interval != -1:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("server side latency (milliseconds) (60 seconds window)")
 plt.xlabel("time (seconds)")
-plt.savefig("server_metrics/" + case_name + "/mean_latency.png", bbox_inches="tight")
+plt.savefig(folder_name + case_name + "/mean_latency.png", bbox_inches="tight")
 plt.clf()
 
 plt.plot(x_axis, threads)
@@ -92,7 +98,7 @@ if tuning_interval != -1:
         plt.axvline(x=loc, color='r', linestyle='--')
 plt.ylabel("Current Thread Count")
 plt.xlabel("time (seconds)")
-plt.savefig("server_metrics/" + case_name + '/thread_counts.png', bbox_inches='tight')
+plt.savefig(folder_name + case_name + '/thread_counts.png', bbox_inches='tight')
 plt.clf()
 
 print("metrics collection complete")

@@ -4,7 +4,7 @@ import os
 
 
 def get_data(case):
-    dir = "server_metrics/" + case + "/"
+    dir = "tuning_both/" + case + "/"
 
     with open(dir + "params.csv") as f:
         reader = csv.reader(f)
@@ -30,9 +30,9 @@ def get_data(case):
     return [throughput, mean_latency, threads, duration, interval, tuning_interval]
 
 
-case_name = "browsing_200_long_default_tuning_without_apache"  # to make the folder name
-case1 = "browsing_200_long_default_without_apache"
-case2 = "browsing_200_long_tuning_without_apache"
+case_name = "browsing_100_tuning_both_vs_not_tuning"  # to make the folder name
+case1 = "browsing_100_no_tuning"
+case2 = "browsing_100_tuning_both"
 
 data1 = get_data(case1)
 data2 = get_data(case2)
