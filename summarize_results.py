@@ -5,6 +5,7 @@ dir = "apache_max_clients"
 target = dir + "/summary.csv"
 
 dir_list = os.listdir(dir)
+dir_list.sort()
 
 
 with open(target, "w") as f:
