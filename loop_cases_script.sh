@@ -12,6 +12,8 @@ CONCURRENCY="200"
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
 
+mkdir ${FOLDER_NAME}
+
 if [[ -d "$FOLDER_NAME/$CASE_NAME" ]]
 then
     read -p "Directory already exists. Replace? (Y/n)" yn
