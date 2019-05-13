@@ -6,7 +6,7 @@ import os
 def get_data(case):
     dir = "tuning_both/" + case + "/"
 
-    with open(dir + "params.csv") as f:
+    with open(dir + "test_notes.csv") as f:
         reader = csv.reader(f)
         duration = int(next(reader)[1])
         interval = int(next(reader)[1])
@@ -30,8 +30,8 @@ def get_data(case):
     return [throughput, mean_latency, threads, duration, interval, tuning_interval]
 
 
-case_name = "browsing_100_tuning_both_vs_not_tuning"  # to make the folder name
-case1 = "browsing_100_no_tuning"
+case_name = "browsing_100_tuning_both_vs_default"  # to make the folder name
+case1 = "browsing_100_default"
 case2 = "browsing_100_tuning_both"
 
 data1 = get_data(case1)
