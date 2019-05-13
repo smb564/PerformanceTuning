@@ -25,5 +25,3 @@ with open(target, "w") as f:
                     record.append(row[1])
 
         writer.writerow(record)
-
-
