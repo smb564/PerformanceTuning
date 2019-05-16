@@ -77,6 +77,7 @@ do
         # run the performance test
         ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW2Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.10:80/tpcw/"
 
+        ssh wso2@192.168.32.10 "./supun/stop-java.sh"
 
         # running the none tuning case
         CASE_NAME="default"
@@ -110,6 +111,8 @@ do
 
         # run the performance test
         ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW2Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.10:80/tpcw/"
+
+        ssh wso2@192.168.32.10 "./supun/stop-java.sh"
 
         # now join the plots
         python3 join_plots.py ${FOLDER_NAME} "default" "tuning"
