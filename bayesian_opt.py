@@ -8,6 +8,8 @@ import csv
 import sys
 import os
 
+#TODO : I REMOVED TUNING TOMCAT PARAMS!!!
+
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 case_name = sys.argv[2]
 

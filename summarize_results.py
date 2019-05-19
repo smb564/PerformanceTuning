@@ -1,7 +1,7 @@
 import os
 import csv
 
-dir = "apache_max_clients"
+dir = "tuning_both"
 target = dir + "/summary.csv"
 
 dir_list = os.listdir(dir)

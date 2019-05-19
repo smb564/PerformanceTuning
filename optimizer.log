@@ -1,0 +1,41 @@
+directory already exists
+|   iter    |  target   |     x     |
+-------------------------------------
+Setting fixed thread pool size to 261.87276272749295
+Mean response time : 10.184193800807467
+| [0m 1       [0m | [0m-10.18   [0m | [0m 261.9   [0m |
+Setting fixed thread pool size to 437.7882061964517
+Mean response time : 19.540622977536408
+| [0m 2       [0m | [0m-19.54   [0m | [0m 437.8   [0m |
+Setting fixed thread pool size to 20.066337394060035
+Mean response time : 43.421729040698715
+| [0m 3       [0m | [0m-43.42   [0m | [0m 20.07   [0m |
+Setting fixed thread pool size to 195.35289212646705
+Mean response time : 263.242227593711
+| [0m 4       [0m | [0m-263.2   [0m | [0m 195.4   [0m |
+Setting fixed thread pool size to 261.8457781418785
+Mean response time : 76.47794930106461
+| [0m 5       [0m | [0m-76.48   [0m | [0m 261.8   [0m |
+Setting fixed thread pool size to 261.87343010449257
+Mean response time : 656.8789272554068
+| [0m 6       [0m | [0m-656.9   [0m | [0m 261.9   [0m |
+Setting fixed thread pool size to 294.99823334744747
+Mean response time : 356.31929988886566
+| [0m 7       [0m | [0m-356.3   [0m | [0m 295.0   [0m |
+Setting fixed thread pool size to 27.82188097799913
+Mean response time : 3761.628994149059
+| [0m 8       [0m | [0m-3.762e+0[0m | [0m 27.82   [0m |
+Setting fixed thread pool size to 294.99840916892987
+Mean response time : 1825.3066915739576
+| [0m 9       [0m | [0m-1.825e+0[0m | [0m 295.0   [0m |
+Setting fixed thread pool size to 261.87267367530495
+Mean response time : 631.3554288333736
+| [0m 10      [0m | [0m-631.4   [0m | [0m 261.9   [0m |
+Setting fixed thread pool size to 195.3533095975652
+Mean response time : 1252.8055873455974
+| [0m 11      [0m | [0m-1.253e+0[0m | [0m 195.4   [0m |
+Setting fixed thread pool size to 105.47978551011796
+Mean response time : 310778.5433310769
+| [0m 12      [0m | [0m-3.108e+0[0m | [0m 105.5   [0m |
+=====================================
+Optimization complete

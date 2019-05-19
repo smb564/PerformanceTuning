@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
-optimizer="gp_optimizer.py"
+optimizer="gp_optimizer_only_tomcat.py"
 
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
