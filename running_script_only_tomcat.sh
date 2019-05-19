@@ -27,6 +27,8 @@ then
     esac
 fi
 
+mkdir -p ${PARENT_FOLDER}
+
 for MIX in 1 2 3
 do
     for CONCURRENCY in 100 200 300 400
