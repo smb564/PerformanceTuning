@@ -30,7 +30,7 @@ num_iter = test_duration // tuning_interval - init_points
 prev_param = int(requests.get("http://192.168.32.1:8080/getparam?name=minSpareThreads").json())
 
 
-def objective(x):
+def objective(x, y):
     print("Setting fixed thread pool size to " + str(x))
     global prev_param
     # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
@@ -45,19 +45,19 @@ def objective(x):
         requests.put("http://192.168.32.1:8080/setparam?name=maxThreads&value="+str(int(x)))
 
     # set the MaxRequestWorkers of Apache webserver to the same value
-    requests.get("http://192.168.32.10:5001/setParam?MaxRequestWorkers=" + str(int(x)))
+    requests.get("http://192.168.32.10:5001/setParam?MaxRequestWorkers=" + str(int(y)))
 
     prev_param = int(x)
     time.sleep(tuning_interval)
     res = requests.get("http://192.168.32.1:8080/performance?server=apache").json()
     data.append(res)
-    param_history.append([int(x)])
+    param_history.append([int(x), int(y)])
     print("Mean response time : " + str(res[2]))
     return -float(res[2])
 
 
 # Bounded region of parameter space
-pbounds = {'x': (20, 600)}
+pbounds = {'x': (20, 400), 'y': (20, 400)}
 
 optimizer = BayesianOptimization(
     f=objective,
