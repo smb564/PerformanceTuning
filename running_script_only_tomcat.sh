@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
-optimizer="gp_optimizer_only_tomcat.py"
+optimizer="bayesian_opt_only_tomcat.py"
 
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
@@ -17,7 +17,7 @@ TUNING_INTERVAL="60"
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
 
-PARENT_FOLDER="only_tomcat_gpopt"
+PARENT_FOLDER="only_tomcat_tpe"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
