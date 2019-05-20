@@ -63,7 +63,7 @@ optimizer = BayesianOptimization(
 )
 
 optimizer.maximize(
-    init_points=4,
+    init_points=init_points,
     n_iter=num_iter,
 )
 
