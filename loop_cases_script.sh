@@ -3,7 +3,7 @@ source venv/bin/activate
 
 FOLDER_NAME="tpcw_results_dataset"
 RU="60"
-MI="480"
+MI="600"
 RD="60"
 
 declare -A MIX2NAME
@@ -29,11 +29,11 @@ for MIX in 1 2 3
 do
     for CONCURRENCY in 50 100 150 200
     do
-        for MODEL in "mpm_prefork" "mpm_event" "mpm_worker"
+        for MODEL in "mpm_prefork"
         do
-            for APACHE_PARAM in 100 200 400
+            for APACHE_PARAM in 100 200 300 400
             do
-                for TOMCAT_PARAM in 100 200 400
+                for TOMCAT_PARAM in 100 200 300 400
                 do
                     # set the required mpm module
                     curl 192.168.32.10:5001/setModel?model=${MODEL}
@@ -58,9 +58,18 @@ do
 
                     nohup python3 server_side_metrics.py "$FOLDER_NAME" "${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}_${APACHE_PARAM}_${TOMCAT_PARAM}" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL">metrics_log.txt &
 
-                    ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}_${APACHE_PARAM}_${TOMCAT_PARAM}.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.10:80/tpcw/"
+                    nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}_${APACHE_PARAM}_${TOMCAT_PARAM}.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW http://192.168.32.10:80/tpcw/" > eb.log &
+
+                    # to finish the tests after the time eliminates
+                    sleep ${RU}s
+                    sleep ${MI}s
+                    sleep ${RD}s
+                    sleep 100s
 
                     ssh wso2@192.168.32.10 "./supun/stop-java.sh"
+
+                    ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 stop"
+                    ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
                 done
             done
         done
