@@ -89,6 +89,7 @@ do
         ssh wso2@192.168.32.10 "./supun/stop-java.sh"
 
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 stop"
+        sleep 100s
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
 
@@ -134,6 +135,7 @@ do
         ssh wso2@192.168.32.10 "./supun/stop-java.sh"
 
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 stop"
+        sleep 100s
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
         # now join the plots
