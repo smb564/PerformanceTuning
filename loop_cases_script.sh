@@ -12,16 +12,16 @@ MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
 
-mkdir ${FOLDER_NAME}
+#if [[ -d "$FOLDER_NAME" ]]
+#then
+#    read -p "Directory already exists. Replace? (Y/n)" yn
+#    case $yn in
+#        [Yy]* ) true;;
+#        * ) exit;;
+#    esac
+#fi
 
-if [[ -d "$FOLDER_NAME" ]]
-then
-    read -p "Directory already exists. Replace? (Y/n)" yn
-    case $yn in
-        [Yy]* ) true;;
-        * ) exit;;
-    esac
-fi
+mkdir ${FOLDER_NAME}
 
 ssh wso2@192.168.32.6 "cd supun/dist && mkdir $FOLDER_NAME"
 
@@ -64,11 +64,12 @@ do
                     sleep ${RU}s
                     sleep ${MI}s
                     sleep ${RD}s
-                    sleep 100s
+                    sleep 20s
 
                     ssh wso2@192.168.32.10 "./supun/stop-java.sh"
 
                     ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 stop"
+                    sleep 100s
                     ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
                 done
             done
