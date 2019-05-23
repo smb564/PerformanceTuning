@@ -27,7 +27,7 @@ test_duration = ru + mi + rd
 tuning_interval = tune_interval  # in seconds
 
 # query and get the current thread pool size (assuming fixed thread pool)
-prev_param = int(requests.get("http://192.168.32.1:8080/getparam?name=minSpareThreads").json())
+prev_param = int(requests.get("http://192.168.32.2:8080/getparam?name=minSpareThreads").json())
 
 
 def objective(x):
@@ -38,15 +38,15 @@ def objective(x):
     # (because we can't set a lower value for maxThreads than minSpareThreads)
 
     if int(x) > prev_param:
-        requests.put("http://192.168.32.1:8080/setparam?name=maxThreads&value=" + str(int(x)))
-        requests.put("http://192.168.32.1:8080/setparam?name=minSpareThreads&value=" + str(int(x)))
+        requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value=" + str(int(x)))
+        requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value=" + str(int(x)))
     else:
-        requests.put("http://192.168.32.1:8080/setparam?name=minSpareThreads&value="+str(int(x)))
-        requests.put("http://192.168.32.1:8080/setparam?name=maxThreads&value="+str(int(x)))
+        requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value="+str(int(x)))
+        requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value="+str(int(x)))
 
     prev_param = int(x)
     time.sleep(tuning_interval)
-    res = requests.get("http://192.168.32.1:8080/performance?server=tomcat").json()
+    res = requests.get("http://192.168.32.2:8080/performance?server=tomcat").json()
     data.append(res)
     param_history.append(int(x))
     print("Mean response time : " + str(res[2]))

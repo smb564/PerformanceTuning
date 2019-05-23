@@ -51,7 +51,7 @@ do
 
         echo "Reconnecting Performance Monitor to Tomcat"
         # reconnect the monitor server to the new Tomcat instance
-        curl 192.168.32.1:8080/reconnect
+        curl 192.168.32.2:8080/reconnect
 
         # just in case the monitor takes some to connect
         sleep 3s
@@ -81,7 +81,7 @@ do
 
         echo "Reconnecting Performance Monitor to Tomcat"
         # reconnect the monitor server to the new Tomcat instance
-        curl 192.168.32.1:8080/reconnect
+        curl 192.168.32.2:8080/reconnect
 
         # just in case the monitor takes some to connect
         sleep 3s
