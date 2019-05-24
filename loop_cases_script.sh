@@ -51,8 +51,8 @@ do
 
                     curl 192.168.32.10:5001/setParam?MaxRequestWorkers=${APACHE_PARAM}
 
-                    curl 192.168.32.2:8080/setparam?name=maxThreads&value=${TOMCAT_PARAM}
-                    curl 192.168.32.2:8080/setparam?name=minSpareThreads&value=${TOMCAT_PARAM}
+                    curl -X PUT "http://192.168.32.2:8080/setparam?name=maxThreads&value=${TOMCAT_PARAM}"
+                    curl -X PUT "http://192.168.32.2:8080/setparam?name=minSpareThreads&value=${TOMCAT_PARAM}"
 
                     sleep 5s
 
