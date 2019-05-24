@@ -39,19 +39,19 @@ tuning_interval = -1  # in seconds (from bayesian_opt.py), -1 if not tuning TODO
 
 # server is returning total request count
 
-prev = requests.get("http://192.168.32.1:8080/performance?server=apache").json()[1]
+prev = requests.get("http://192.168.32.2:8080/performance?server=apache").json()[1]
 
 for _ in range(iterations):
     # server records results (mean latency, 99 latency etc.) for 1 minute windows
     # (we can configure window interval in tomcat/webapps/tpc-w/WEB-INF/web.xml file)
     time.sleep(interval)
-    res = requests.get("http://192.168.32.1:8080/performance?server=apache").json()
+    res = requests.get("http://192.168.32.2:8080/performance?server=apache").json()
     throughput.append(float(res[1] - prev)/interval)
     prev = res[1]
     mean_latency.append(res[2])
 
     # get the current thread pool size as well
-    threads.append(requests.get("http://192.168.32.1:8080/getparam?name=poolSize").json())
+    threads.append(requests.get("http://192.168.32.2:8080/getparam?name=poolSize").json())
 
 # save the configurations and average numbers in a file
 with open(folder_name + case_name + "/test_notes.csv", "w") as f:
