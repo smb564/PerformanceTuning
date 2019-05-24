@@ -46,13 +46,13 @@ do
                     nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" &
 
                     ssh wso2@192.168.32.11 "./supun/scripts/restart-tomcat.sh"
-                    curl 192.168.32.1:8080/reconnect
+                    curl 192.168.32.2:8080/reconnect
                     sleep 3s
 
                     curl 192.168.32.10:5001/setParam?MaxRequestWorkers=${APACHE_PARAM}
 
-                    curl 192.168.32.1:8080/setparam?name=maxThreads&value=${TOMCAT_PARAM}
-                    curl 192.168.32.1:8080/setparam?name=minSpareThreads&value=${TOMCAT_PARAM}
+                    curl 192.168.32.2:8080/setparam?name=maxThreads&value=${TOMCAT_PARAM}
+                    curl 192.168.32.2:8080/setparam?name=minSpareThreads&value=${TOMCAT_PARAM}
 
                     sleep 5s
 
