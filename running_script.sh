@@ -5,23 +5,22 @@ optimizer="gp_optimizer.py"
 
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
-MIX=1
-CONCURRENCY="400"
+
 
 RU="60"
-MI="600"
+MI="3600"
 RD="60"
 URL="http://192.168.32.10:80"
 
 # Parameters are tuned this often
-TUNING_INTERVAL="60"
+TUNING_INTERVAL="120"
 
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
 
 MODEL="mpm_prefork"
 
-PARENT_FOLDER="tuning_both_same_gpopt"
+PARENT_FOLDER="tuning_both_gpopt_long_client_numbers"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
@@ -34,9 +33,9 @@ fi
 
 mkdir -p ${PARENT_FOLDER}
 
-for MIX in 1 2 3
+for MIX in 1
 do
-    for CONCURRENCY in 100 200 300 400
+    for CONCURRENCY in 150
     do
         FOLDER_NAME="${PARENT_FOLDER}/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}"
         ssh wso2@192.168.32.6 "cd supun/dist && mkdir -p $FOLDER_NAME"
@@ -44,8 +43,6 @@ do
 
         CASE_NAME="tuning"
         echo "Running the tuning case"
-
-        # create the directory at client side
 
         # set the required mpm module
         curl 192.168.32.10:5001/setModel?model=${MODEL}
@@ -59,7 +56,10 @@ do
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
         # start the apache metrics collection java program
-        nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" &
+        nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | java -jar -Dcom.sun.management.jmxremote "\
+        "-Dcom.sun.management.jmxremote.port=9010 " \
+        "-Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false " \
+        "-Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" > apache_metrics.log &
 
         echo "Restarting tomcat server..."
         # restart the tomcat server
@@ -67,21 +67,24 @@ do
 
         echo "Tomcat restarted"
 
-        echo "Reconnecting Performance Monitor to Tomcat"
+        # run the performance test
+        nohup ssh wso2@192.168.32.6 "cd supun/dist && java -Dcom.sun.management.jmxremote " \
+        "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
+        "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
+        "-jar rbe.jar -WINDOW 60 -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
+        "-ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+
+        sleep ${RU}s
+
+        echo "Reconnecting Performance Monitor"
         # reconnect the monitor server to the new Tomcat instance
         curl 192.168.32.2:8080/reconnect
 
-        # just in case the monitor takes some to connect
-        sleep 3s
-
-        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
-        nohup python3 ${optimizer} "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$TUNING_INTERVAL"> optimizer.log &
-
-        # run the performance test
-        nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
+        nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL"> client_side.txt &
+        nohup python3 ${optimizer} "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$TUNING_INTERVAL"> optimizer.log &
 
         # to finish the tests after the time eliminates
-        sleep ${RU}s
         sleep ${MI}s
         sleep ${RD}s
         sleep 100s
@@ -106,7 +109,10 @@ do
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
         # start the apache metrics collection java program
-        nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" &
+        nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | " \
+        "java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 " \
+        "-Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false " \
+        "-Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" > apache_metrics.log &
 
         echo "Restarting tomcat server..."
         # restart the tomcat server
@@ -114,20 +120,23 @@ do
 
         echo "Tomcat restarted"
 
-        echo "Reconnecting Performance Monitor to Tomcat"
+        # run the performance test
+        nohup ssh wso2@192.168.32.6 "cd supun/dist && java -Dcom.sun.management.jmxremote " \
+        "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
+        "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
+        "-jar rbe.jar -WINDOW 60 -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD " \
+        "$RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+
+        sleep ${RU}s
+
+        echo "Reconnecting Performance Monitor"
         # reconnect the monitor server to the new Tomcat instance
         curl 192.168.32.2:8080/reconnect
 
-        # just in case the monitor takes some to connect
-        sleep 3s
-
-        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
-
-        # run the performance test
-        nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
+        nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL"> client_side.txt &
 
         # to finish the tests after the time eliminates
-        sleep ${RU}s
         sleep ${MI}s
         sleep ${RD}s
         sleep 100s

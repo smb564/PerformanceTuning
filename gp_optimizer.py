@@ -49,7 +49,7 @@ def objective(x, y):
 
     prev_param = int(x)
     time.sleep(tuning_interval)
-    res = requests.get("http://192.168.32.2:8080/performance?server=apache").json()
+    res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
     data.append(res)
     param_history.append([int(x), int(y)])
     print("Mean response time : " + str(res[2]))
