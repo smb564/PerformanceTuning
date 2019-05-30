@@ -40,9 +40,13 @@ tuning_interval = -1
 # server is returning total request count
 prev = requests.get("http://192.168.32.2:8080/performance?server=client").json()[1]
 
+current_time = time.time()
+
 for _ in range(iterations):
-    # server records results (mean latency, 99 latency etc.) for 40 seconds minute windows
-    time.sleep(interval)
+    # server records results (mean latency, 99 latency etc.) for 1 minute windows
+    print(current_time + interval - time.time(), interval)
+    time.sleep(current_time + interval - time.time())
+    current_time += interval
     res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
     print(res)
     throughput.append(float(res[1] - prev)/interval)
