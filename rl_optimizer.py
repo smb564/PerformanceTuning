@@ -3,6 +3,7 @@ import requests
 import time
 import sys
 import csv
+import os
 
 explored = set()
 
@@ -15,7 +16,7 @@ class RLOptimizer:
         self.step_size = step_size
         self.tuning_interval = tuning_interval
 
-        # TODO : added 120 randomly. Usually the SLA is used. Make sure you have a value greater than max(response_time)
+        # TODO : added 120 randomly. Usually the SLA is used.
         self.SLA_RT = 120  # SLA Response Time levels. To get the rewards using SLA - RT
 
         if tune:
@@ -231,13 +232,18 @@ if __name__ == "__main__":
         iterations = test_duration // tuning_interval
         param_history, data = tune(alpha, gamma, 0.9, state2id, q_folder + case_name + "_Q.npy", iterations, tuning_interval)
 
-        with open(folder_name + case_name + "/results.csv", "w") as f:
+        try:
+            os.makedirs(folder_name + "/" + case_name)
+        except FileExistsError:
+            print("directory already exists")
+
+        with open(folder_name + "/" + case_name + "/results.csv", "w") as f:
             writer = csv.writer(f)
             writer.writerow(["IRR", "Request Count", "Mean Latency (for window)", "99th Latency"])
             for line in data:
                 writer.writerow(line)
 
-        with open(folder_name + case_name + "/param_history.csv", "w") as f:
+        with open(folder_name + "/" + case_name + "/param_history.csv", "w") as f:
             writer = csv.writer(f)
             for line in param_history:
                 writer.writerow(line)
