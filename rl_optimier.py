@@ -49,7 +49,7 @@ class RLOptimizer:
             epsilon = min(epsilon, 0.9)
 
     def clean_q_table(self):
-        self.Q = self._init_q(len(self.state2id), self.n_actions)
+        self.Q = self._init_q(len(self.state2id), self.n_actions, self.step_size)
 
     def execute(self, alpha, gamma, epsilon, iterations):
         # s is the current configuration
@@ -92,12 +92,11 @@ class RLOptimizer:
 
         return action
 
-    @staticmethod
-    def _init_q(s, a):
+    def _init_q(self, s, a):
         Q = np.zeros((s, a))
 
         # to remove illogical operations (which goes beyond the ranges)
-        for i in range(20, 401, 10):
+        for i in range(20, 401, self.step_size):
             Q[state2id[(20, i)], 1] = -np.Infinity
             Q[state2id[(400, i)], 0] = -np.Infinity
             Q[state2id[(i, 20)], 4] = -np.Infinity
@@ -203,12 +202,12 @@ if __name__ == "__main__":
     alpha = 0.4
     gamma = 0.75
 
-    step_size = 10
+    step_size = 20
     state2id = {}
     n_actions = 6  # increase, decrease, no change --> Apache, same for tomcat
 
-    for i in range(20, 401, 10):
-        for j in range(20, 401, 10):
+    for i in range(20, 401, step_size):
+        for j in range(20, 401, step_size):
             state2id[(i, j)] = len(state2id)
 
     if sys.argv[1].lower() == "pretrain":
