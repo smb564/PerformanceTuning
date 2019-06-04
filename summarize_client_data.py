@@ -122,7 +122,7 @@ def generate_plots(file_name, case_name, target_folder, measuring_interval=20, m
         else:
             latencies.append(0)
 
-    plt.plot(x_axis[1:], latencies[1:])
+    plt.plot(x_axis, latencies[1:])
     plt.ylabel("client side response time (milliseconds) (" + str(measuring_window) + " seconds window)")
     plt.xlabel("time (seconds)")
     plt.savefig(target_folder + "/" + case_name + "_response_time.png", bbox_inches="tight")
@@ -140,12 +140,14 @@ if __name__ == "__main__":
         print("Directory already exists")
 
     for d in os.listdir(folder):
-        if d != "summary.csv":
+        if d != "summary.csv" and d != "plots":
             record = [d.split("_")[0], int(d.split("_")[1])]
             record += get_numbers(folder + "/" + d + "/default.m")
             records.append(record)
             generate_plots(folder + "/" + d + "/default.m", d, folder + "/plots",
                            measuring_interval=20, measuring_window=60)
+
+            print(d + " done")
 
     records.sort()
 
