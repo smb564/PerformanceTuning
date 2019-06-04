@@ -54,6 +54,7 @@ def get_times(temp, term):
 endtimes = get_times(data, "endtimes")
 starttimes = get_times(data, "starttimes")
 wips = get_times(data, "wips")[:config["rampu_t"] + config["measure_t"] + config["rampd_t"]]
+errors = int(get(data, "Total Errors:"))
 
 average_throughput = sum(wips[config["rampu_t"]:config["rampu_t"] + config["measure_t"]+1])/float(config["measure_t"]+1)
 
@@ -72,3 +73,5 @@ for i in range(len(starttimes)):
 
 average_rt = sum(rt_measure)/float(len(rt_measure))
 print("Average Response Time:", average_rt)
+
+print("Total Errors:", errors)
