@@ -134,7 +134,10 @@ if __name__ == "__main__":
     records = [["Mix", "Number of EBs", "WIPS", "Response Time (ms)", "Total Errors"]]
 
     # create the directory for plots
-    os.makedirs(folder + "/plots")
+    try:
+        os.makedirs(folder + "/plots")
+    except FileExistsError:
+        print("Directory already exists")
 
     for d in os.listdir(folder):
         if d != "summary.csv":
