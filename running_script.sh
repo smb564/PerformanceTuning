@@ -18,6 +18,9 @@ TUNING_INTERVAL="120"
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
 
+# Time window to take average response time
+MEASURING_WINDOW="60"
+
 MODEL="mpm_prefork"
 
 PARENT_FOLDER="tuning_both_gpopt_long_client_numbers"
@@ -71,7 +74,7 @@ do
         nohup ssh wso2@192.168.32.6 "cd supun/dist && java -Dcom.sun.management.jmxremote " \
         "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
         "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
-        "-jar rbe.jar -WINDOW 60 -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
+        "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
         "-ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
 
         sleep ${RU}s
@@ -81,7 +84,7 @@ do
         curl 192.168.32.2:8080/reconnect
 
 #        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
-        nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL"> client_side.txt &
+        nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
         nohup python3 ${optimizer} "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$TUNING_INTERVAL"> optimizer.log &
 
         # to finish the tests after the time eliminates
@@ -124,7 +127,7 @@ do
         nohup ssh wso2@192.168.32.6 "cd supun/dist && java -Dcom.sun.management.jmxremote " \
         "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
         "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
-        "-jar rbe.jar -WINDOW 60 -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD " \
+        "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD " \
         "$RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
 
         sleep ${RU}s
@@ -134,7 +137,7 @@ do
         curl 192.168.32.2:8080/reconnect
 
 #        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
-        nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL"> client_side.txt &
+        nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
 
         # to finish the tests after the time eliminates
         sleep ${MI}s
