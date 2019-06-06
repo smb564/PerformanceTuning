@@ -62,7 +62,7 @@ do
         nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | java -jar -Dcom.sun.management.jmxremote "\
         "-Dcom.sun.management.jmxremote.port=9010 " \
         "-Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false " \
-        "-Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" > apache_metrics.log &
+        "-Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar ${MEASURING_WINDOW}" > apache_metrics.log &
 
         echo "Restarting tomcat server..."
         # restart the tomcat server
@@ -83,7 +83,7 @@ do
         # reconnect the monitor server to the new Tomcat instance
         curl 192.168.32.2:8080/reconnect
 
-#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
+#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> metrics_log.txt &
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
         nohup python3 ${optimizer} "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$TUNING_INTERVAL"> optimizer.log &
 
@@ -115,7 +115,7 @@ do
         nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | " \
         "java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 " \
         "-Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false " \
-        "-Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" > apache_metrics.log &
+        "-Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar ${MEASURING_WINDOW}" > apache_metrics.log &
 
         echo "Restarting tomcat server..."
         # restart the tomcat server
@@ -136,7 +136,7 @@ do
         # reconnect the monitor server to the new Tomcat instance
         curl 192.168.32.2:8080/reconnect
 
-#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
+#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "$RD" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> metrics_log.txt &
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
 
         # to finish the tests after the time eliminates

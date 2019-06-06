@@ -11,6 +11,7 @@ URL="http://192.168.32.10:80"
 
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
+MEASURING_WINDOW="20"
 
 MODEL="mpm_prefork"
 
@@ -50,7 +51,10 @@ do
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
         # start the apache metrics collection java program
-        nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log | java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar" &
+        nohup ssh wso2@192.168.32.10 "tail -0f /var/log/apache2/access.log |" \
+        " java -jar -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010" \
+        " -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false" \
+        " -Dcom.sun.management.jmxremote.ssl=false /home/wso2/supun/apache-metrics-1.0-SNAPSHOT.jar ${MEASURING_WINDOW}" &
 
         echo "Restarting tomcat server..."
         # restart the tomcat server
@@ -68,7 +72,8 @@ do
         nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
 
         # run the performance test
-        nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+        nohup ssh wso2@192.168.32.6 "cd supun/dist && java rbe.RBE -EB rbe.EBTPCW${MIX}Factory ${CONCURRENCY} -OUT " \
+        "${FOLDER_NAME}/$CASE_NAME.m -RU $RU -MI $MI -RD $RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
 
         # to finish the tests after the time eliminates
         sleep ${RU}s
@@ -83,4 +88,3 @@ do
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
     done
 done
-

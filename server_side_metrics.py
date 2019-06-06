@@ -17,6 +17,11 @@ ru = int(sys.argv[3])
 mi = int(sys.argv[4])
 rd = int(sys.argv[5])
 measuring_interval = int(sys.argv[6])
+measuring_window = 60
+
+if len(sys.argv) == 8:
+    # measuring window is provided
+    measuring_window = int(sys.argv[7])
 
 try:
     os.makedirs(folder_name+case_name)
@@ -81,7 +86,7 @@ plt.plot(x_axis, throughput)
 if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
-plt.ylabel("server side throughput (req/seq) (20 seconds window)")
+plt.ylabel("server side throughput (req/seq) (" + str(measuring_interval) + " seconds window)")
 plt.xlabel("time (seconds)")
 plt.savefig(folder_name + case_name + "/throughput.png", bbox_inches="tight")
 plt.clf()
@@ -90,7 +95,7 @@ plt.plot(x_axis, mean_latency)
 if tuning_interval != -1:
     for loc in tune_locations:
         plt.axvline(x=loc, color='r', linestyle='--')
-plt.ylabel("server side latency (milliseconds) (60 seconds window)")
+plt.ylabel("server side latency (milliseconds) (" + str(measuring_window) + " seconds window)")
 plt.xlabel("time (seconds)")
 plt.savefig(folder_name + case_name + "/mean_latency.png", bbox_inches="tight")
 plt.clf()

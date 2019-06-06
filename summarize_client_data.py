@@ -40,9 +40,6 @@ def get_times(temp, term):
 def get_numbers(file_name):
     endtimes, starttimes, wips, errors, config = get_data(file_name)
 
-    # filter the data only for measurement interval
-    wips = wips[:config["rampu_t"] + config["measure_t"] + config["rampd_t"]]
-
     average_throughput = sum(wips[config["rampu_t"]:config["rampu_t"]
                                                     + config["measure_t"] + 1]) / float(config["measure_t"] + 1)
 
@@ -83,7 +80,7 @@ def get_data(file_name):
 
     endtimes = get_times(data, "endtimes")
     starttimes = get_times(data, "starttimes")
-    wips = get_times(data, "wips")
+    wips = get_times(data, "wips")[:config["rampu_t"] + config["measure_t"] + config["rampd_t"]]
     errors = int(get(data, "Total Errors:"))
 
     return endtimes, starttimes, wips, errors, config
@@ -132,6 +129,12 @@ def generate_plots(file_name, case_name, target_folder, measuring_interval=20, m
 if __name__ == "__main__":
     folder = sys.argv[1]
     records = [["Mix", "Number of EBs", "WIPS", "Response Time (ms)", "Total Errors"]]
+    measuring_interval = 20
+    measuring_window = 60
+
+    if len(sys.argv) == 4:
+        measuring_interval = int(sys.argv[2])
+        measuring_window = int(sys.argv[3])
 
     # create the directory for plots
     try:
@@ -145,7 +148,7 @@ if __name__ == "__main__":
             record += get_numbers(folder + "/" + d + "/default.m")
             records.append(record)
             generate_plots(folder + "/" + d + "/default.m", d, folder + "/plots",
-                           measuring_interval=20, measuring_window=60)
+                           measuring_interval=measuring_interval, measuring_window=measuring_window)
 
             print(d + " done")
 
