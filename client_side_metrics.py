@@ -8,6 +8,7 @@ import sys
 throughput = []
 mean_latency = []
 threads = []
+p99_latency = []
 
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 
@@ -53,6 +54,7 @@ for _ in range(iterations):
     throughput.append(float(res[1] - prev)/interval)
     prev = res[1]
     mean_latency.append(res[2])
+    p99_latency.append(res[3])
     threads.append(requests.get("http://192.168.32.2:8080/getparam?name=poolSize").json())
 
 
@@ -69,10 +71,10 @@ with open(folder_name + case_name + "/test_notes.csv", "w") as f:
 # save the data
 with open(out_filename, "w") as f:
     writer = csv.writer(f)
-    writer.writerow(["throughput", "latency", "threads"])
+    writer.writerow(["throughput", "latency", "threads", "p99 latency"])
 
     for i in range(len(throughput)):
-        writer.writerow([throughput[i], mean_latency[i], threads[i]])
+        writer.writerow([throughput[i], mean_latency[i], threads[i], p99_latency[i]])
 
 x_axis = [x*interval for x in range(iterations)]
 
@@ -93,6 +95,12 @@ plt.plot(x_axis, threads)
 plt.ylabel("Current Thread Count")
 plt.xlabel("time (seconds)")
 plt.savefig(folder_name + case_name + '/thread_counts.png', bbox_inches='tight')
+plt.clf()
+
+plt.plot(x_axis, p99_latency)
+plt.ylabel("Client Side 99th Percentile Response Time (milliseconds) (" + str(measuring_window) + " seconds window)")
+plt.xlabel("time (seconds)")
+plt.savefig(folder_name + case_name + "/p99_latency.png", bbox_inches="tight")
 plt.clf()
 
 print("metrics collection complete")
