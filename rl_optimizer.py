@@ -3,6 +3,7 @@ import requests
 import time
 import sys
 import csv
+import os
 
 explored = set()
 
@@ -15,7 +16,7 @@ class RLOptimizer:
         self.step_size = step_size
         self.tuning_interval = tuning_interval
 
-        # TODO : added 120 randomly. Usually the SLA is used. Make sure you have a value greater than max(response_time)
+        # TODO : added 120 randomly. Usually the SLA is used.
         self.SLA_RT = 120  # SLA Response Time levels. To get the rewards using SLA - RT
 
         if tune:
@@ -49,7 +50,7 @@ class RLOptimizer:
             epsilon = min(epsilon, 0.9)
 
     def clean_q_table(self):
-        self.Q = self._init_q(len(self.state2id), self.n_actions)
+        self.Q = self._init_q(len(self.state2id), self.n_actions, self.step_size)
 
     def execute(self, alpha, gamma, epsilon, iterations):
         # s is the current configuration
@@ -92,12 +93,11 @@ class RLOptimizer:
 
         return action
 
-    @staticmethod
-    def _init_q(s, a):
+    def _init_q(self, s, a):
         Q = np.zeros((s, a))
 
         # to remove illogical operations (which goes beyond the ranges)
-        for i in range(20, 401, 10):
+        for i in range(20, 401, self.step_size):
             Q[state2id[(20, i)], 1] = -np.Infinity
             Q[state2id[(400, i)], 0] = -np.Infinity
             Q[state2id[(i, 20)], 4] = -np.Infinity
@@ -203,12 +203,12 @@ if __name__ == "__main__":
     alpha = 0.4
     gamma = 0.75
 
-    step_size = 10
+    step_size = 20
     state2id = {}
     n_actions = 6  # increase, decrease, no change --> Apache, same for tomcat
 
-    for i in range(20, 401, 10):
-        for j in range(20, 401, 10):
+    for i in range(20, 401, step_size):
+        for j in range(20, 401, step_size):
             state2id[(i, j)] = len(state2id)
 
     if sys.argv[1].lower() == "pretrain":
@@ -232,13 +232,18 @@ if __name__ == "__main__":
         iterations = test_duration // tuning_interval
         param_history, data = tune(alpha, gamma, 0.9, state2id, q_folder + case_name + "_Q.npy", iterations, tuning_interval)
 
-        with open(folder_name + case_name + "/results.csv", "w") as f:
+        try:
+            os.makedirs(folder_name + "/" + case_name)
+        except FileExistsError:
+            print("directory already exists")
+
+        with open(folder_name + "/" + case_name + "/results.csv", "w") as f:
             writer = csv.writer(f)
             writer.writerow(["IRR", "Request Count", "Mean Latency (for window)", "99th Latency"])
             for line in data:
                 writer.writerow(line)
 
-        with open(folder_name + case_name + "/param_history.csv", "w") as f:
+        with open(folder_name + "/" + case_name + "/param_history.csv", "w") as f:
             writer = csv.writer(f)
             for line in param_history:
                 writer.writerow(line)

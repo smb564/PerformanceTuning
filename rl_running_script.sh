@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
-optimizer="gp_optimizer.py"
+optimizer="rl_optimizer.py"
 
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
+Q_FOLDER="rl_models"
 
 RU="60"
-MI="3600"
+MI="1200"
 RD="60"
 URL="http://192.168.32.10:80"
 
 # Parameters are tuned this often
-TUNING_INTERVAL="120"
+TUNING_INTERVAL="60"
 
 # Interval in which performance is measured
 MEASURING_INTERVAL="20"
@@ -23,7 +24,7 @@ MEASURING_WINDOW="60"
 
 MODEL="mpm_prefork"
 
-PARENT_FOLDER="tuning_both_gpopt_long_client_numbers"
+PARENT_FOLDER="tuning_both_rl"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
@@ -36,9 +37,9 @@ fi
 
 mkdir -p ${PARENT_FOLDER}
 
-for MIX in 1
+for MIX in 2
 do
-    for CONCURRENCY in 150
+    for CONCURRENCY in 100
     do
         FOLDER_NAME="${PARENT_FOLDER}/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}"
         ssh wso2@192.168.32.6 "cd supun/dist && mkdir -p $FOLDER_NAME"
@@ -83,9 +84,9 @@ do
         # reconnect the monitor server to the new Tomcat instance
         curl 192.168.32.2:8080/reconnect
 
-#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "$RU" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
+        nohup python3 server_side_metrics.py "$FOLDER_NAME" "${CASE_NAME}_server" "0" "$MI" "0" "$MEASURING_INTERVAL"> metrics_log.txt &
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
-        nohup python3 ${optimizer} "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$TUNING_INTERVAL"> optimizer.log &
+        nohup python3 ${optimizer} tune ${Q_FOLDER} "$FOLDER_NAME" ${MIX2NAME[${MIX}]}_${CONCURRENCY} "0" "$MI" "0" "$TUNING_INTERVAL"> optimizer.log &
 
         # to finish the tests after the time eliminates
         sleep ${MI}s
@@ -136,7 +137,7 @@ do
         # reconnect the monitor server to the new Tomcat instance
         curl 192.168.32.2:8080/reconnect
 
-#        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "$RD" "$MEASURING_INTERVAL"> metrics_log.txt &
+        nohup python3 server_side_metrics.py "$FOLDER_NAME" "${CASE_NAME}_server" "0" "$MI" "0" "$MEASURING_INTERVAL"> metrics_log.txt &
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
 
         # to finish the tests after the time eliminates
@@ -152,6 +153,7 @@ do
 
         # now join the plots
         python3 join_plots.py ${FOLDER_NAME} "default" "tuning"
+
     done
 done
 
