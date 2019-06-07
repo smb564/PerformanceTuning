@@ -6,6 +6,7 @@ optimizer="gp_optimizer.py"
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
+
 RU="60"
 MI="3600"
 RD="60"
