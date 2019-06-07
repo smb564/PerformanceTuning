@@ -6,7 +6,6 @@ optimizer="gp_optimizer.py"
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
-
 RU="60"
 MI="3600"
 RD="60"
@@ -23,7 +22,7 @@ MEASURING_WINDOW="60"
 
 MODEL="mpm_prefork"
 
-PARENT_FOLDER="tuning_both_gpopt_long_client_numbers"
+PARENT_FOLDER="tuning_both_gpopt_long_client_numbers_3_nodes"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
@@ -36,9 +35,9 @@ fi
 
 mkdir -p ${PARENT_FOLDER}
 
-for MIX in 1
+for MIX in 1 2 3
 do
-    for CONCURRENCY in 150
+    for CONCURRENCY in 30 200
     do
         FOLDER_NAME="${PARENT_FOLDER}/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}"
         ssh wso2@192.168.32.6 "cd supun/dist && mkdir -p $FOLDER_NAME"
