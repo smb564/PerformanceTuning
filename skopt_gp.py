@@ -56,7 +56,9 @@ num_iter = test_duration // tuning_interval
 prev_param = int(requests.get("http://192.168.32.2:8080/getparam?name=minSpareThreads").json())
 
 
-def objective(x, y):
+def objective(p):
+    x = p[0]
+    y = p[1]
     print("Setting fixed thread pool size to " + str(x))
     global prev_param
     # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
