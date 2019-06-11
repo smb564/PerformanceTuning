@@ -33,6 +33,7 @@ from skopt import gp_minimize
 
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 case_name = sys.argv[2]
+only_tomcat = True
 
 try:
     os.makedirs(folder_name+case_name)
@@ -84,11 +85,38 @@ def objective(p):
     return float(res[2])
 
 
+def objective_only_tomcat(x):
+    print("Setting fixed thread pool size to " + str(x))
+    global prev_param
+    # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
+    # we need make sure we set the params in correct order
+    # (because we can't set a lower value for maxThreads than minSpareThreads)
+
+    if int(x) > prev_param:
+        requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value=" + str(int(x)))
+        requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value=" + str(int(x)))
+    else:
+        requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value="+str(int(x)))
+        requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value="+str(int(x)))
+
+    prev_param = int(x)
+    time.sleep(tuning_interval)
+    res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
+    data.append(res)
+    param_history.append([int(x), int(y)])
+    print("Mean response time : " + str(res[2]))
+    return float(res[2])
+
+
 max_clients_range = (20, 600)
 tomcat_threads_range = (20, 600)
 
-res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range],
-                  n_random_starts=init_points, n_calls=num_iter)
+if only_tomcat:
+    res = gp_minimize(func=objective_only_tomcat, dimensions=[tomcat_threads_range], acq_func='EI',
+                      n_random_starts=init_points, n_calls=num_iter)
+else:
+    res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range],
+                      n_random_starts=init_points, n_calls=num_iter)
 
 
 with open(folder_name + case_name + "/results.csv", "w") as f:
