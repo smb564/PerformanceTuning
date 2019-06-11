@@ -86,6 +86,7 @@ def objective(p):
 
 
 def objective_only_tomcat(x):
+    x = x[0]
     print("Setting fixed thread pool size to " + str(x))
     global prev_param
     # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
