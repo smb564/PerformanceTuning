@@ -33,7 +33,7 @@ from skopt import gp_minimize
 
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 case_name = sys.argv[2]
-only_tomcat = True
+only_tomcat = False
 
 try:
     os.makedirs(folder_name+case_name)
@@ -104,7 +104,7 @@ def objective_only_tomcat(x):
     time.sleep(tuning_interval)
     res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
     data.append(res)
-    param_history.append([int(x), int(y)])
+    param_history.append([int(x)])
     print("Mean response time : " + str(res[2]))
     return float(res[2])
 
@@ -117,7 +117,7 @@ if only_tomcat:
                       n_random_starts=init_points, n_calls=num_iter)
 else:
     res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range],
-                      n_random_starts=init_points, n_calls=num_iter)
+                      n_random_starts=init_points, n_calls=num_iter, noise=1.0)
 
 
 with open(folder_name + case_name + "/results.csv", "w") as f:
