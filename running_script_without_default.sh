@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
-optimizer="gp_optimizer.py"
+optimizer="dummy_restart_server.py"
 
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
 declare -A MIX2CONCURRENCY
-MIX2CONCURRENCY=( ["1"]="180" ["2"]="100" ["3"]="30")
+MIX2CONCURRENCY=( ["1"]="200" ["2"]="150" ["3"]="50")
 
 
 RU="60"
@@ -16,17 +16,17 @@ RD="60"
 URL="http://192.168.32.10:80"
 
 # Parameters are tuned this often
-TUNING_INTERVAL="120"
+TUNING_INTERVAL="60"
 
 # Interval in which performance is measured
-MEASURING_INTERVAL="20"
+MEASURING_INTERVAL="60"
 
 # Time window to take average response time
 MEASURING_WINDOW="60"
 
 MODEL="mpm_prefork"
 
-PARENT_FOLDER="tuning_both_skopt_long_client_numbers_3_nodes_only_tomcat"
+PARENT_FOLDER="default_with_reloads"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
@@ -104,7 +104,7 @@ do
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
         # now join the plots
-        python3 join_plots.py ${FOLDER_NAME} "../../default_numbers_3_nodes_long/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}/default" "tuning"
+#        python3 join_plots.py ${FOLDER_NAME} "../../default_numbers_3_nodes_long/${MIX2NAME[${MIX}]}_${CONCURRENCY}_${MODEL}/default" "tuning"
     done
 done
 
