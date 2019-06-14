@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 source venv/bin/activate
 
-optimizer="gp_optimizer.py"
+optimizer="skopt_gp.py"
 
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
 declare -A MIX2CONCURRENCY
-MIX2CONCURRENCY=( ["1"]="180" ["2"]="100" ["3"]="30")
+MIX2CONCURRENCY=( ["1"]="800" ["2"]="600" ["3"]="100")
 
 
 RU="60"
-MI="3600"
+MI="7200"
 RD="60"
 URL="http://192.168.32.10:80"
 
 # Parameters are tuned this often
-TUNING_INTERVAL="120"
+TUNING_INTERVAL="240"
 
 # Interval in which performance is measured
-MEASURING_INTERVAL="20"
+MEASURING_INTERVAL="60"
 
 # Time window to take average response time
 MEASURING_WINDOW="60"
 
 MODEL="mpm_prefork"
 
-PARENT_FOLDER="tuning_both_skopt_long_client_numbers_3_nodes"
+PARENT_FOLDER="tuning_long_tuning_interval_vs_default_with_reloads"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
@@ -80,7 +80,7 @@ do
         "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
         "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
         "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
-        "-ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+        "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
 
         sleep ${RU}s
 
@@ -103,6 +103,9 @@ do
         sleep 100s
         ssh wso2@192.168.32.10 "sudo /etc/init.d/apache2 start"
 
+        # reset the database
+        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
+        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
 
         # running the none tuning case
         CASE_NAME="default"
@@ -133,7 +136,7 @@ do
         "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
         "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
         "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD " \
-        "$RD -ITEM 1000 -TT 0.1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+        "$RD -ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
 
         sleep ${RU}s
 
@@ -143,6 +146,7 @@ do
 
 #        nohup python3 server_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "$RD" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> metrics_log.txt &
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
+        nohup python3 dummy_restart_server.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$TUNING_INTERVAL"> optimizer.log &
 
         # to finish the tests after the time eliminates
         sleep ${MI}s
@@ -157,6 +161,11 @@ do
 
         # now join the plots
         python3 join_plots.py ${FOLDER_NAME} "default" "tuning"
+
+        # reset the database
+        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
+        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
+
     done
 done
 
