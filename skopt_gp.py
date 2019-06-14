@@ -34,6 +34,7 @@ from skopt import gp_minimize
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 case_name = sys.argv[2]
 only_tomcat = False
+tune_apache_keep_alive = True
 
 try:
     os.makedirs(folder_name+case_name)
@@ -60,6 +61,10 @@ prev_param = int(requests.get("http://192.168.32.2:8080/getparam?name=minSpareTh
 def objective(p):
     x = p[0]
     y = p[1]
+
+    if tune_apache_keep_alive:
+        z = p[2]
+
     print("Setting fixed thread pool size to " + str(x))
     global prev_param
     # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
@@ -73,14 +78,22 @@ def objective(p):
         requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value="+str(int(x)))
         requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value="+str(int(x)))
 
-    # set the MaxRequestWorkers of Apache webserver to the same value
-    requests.get("http://192.168.32.10:5001/setParam?MaxRequestWorkers=" + str(int(y)))
+    if tune_apache_keep_alive:
+        requests.get("http://192.168.32.10:5001/setParam?MaxRequestWorkers=" + str(int(y))
+                     + "&KeepAliveTimeout=" + str(int(z)))
+    else:
+        requests.get("http://192.168.32.10:5001/setParam?MaxRequestWorkers=" + str(int(y)))
 
     prev_param = int(x)
     time.sleep(tuning_interval)
     res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
     data.append(res)
-    param_history.append([int(x), int(y)])
+
+    if tune_apache_keep_alive:
+        param_history.append([int(x), int(y), int(z)])
+    else:
+        param_history.append([int(x), int(y)])
+
     print("Mean response time : " + str(res[2]))
     return float(res[2])
 
@@ -111,10 +124,14 @@ def objective_only_tomcat(x):
 
 max_clients_range = (20, 600)
 tomcat_threads_range = (20, 600)
+apache_keep_alive_range = (1, 21)
 
 if only_tomcat:
     res = gp_minimize(func=objective_only_tomcat, dimensions=[tomcat_threads_range], acq_func='EI',
                       n_random_starts=init_points, n_calls=num_iter)
+elif tune_apache_keep_alive:
+    res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range, apache_keep_alive_range],
+                      n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise=3.0)
 else:
     res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range],
                       n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise=3.0)
