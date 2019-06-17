@@ -96,6 +96,11 @@ do
     "$RD -ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
 
     sleep ${RU}s
+
+    echo "Reconnecting Performance Monitor to Tomcat"
+    # reconnect the monitor server to the new Tomcat instance
+    curl 192.168.32.2:8080/reconnect
+
     nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
 
     # to finish the tests after the time eliminates
