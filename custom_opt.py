@@ -48,7 +48,7 @@ def get_performance_only_tomcat(x, i):
         requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value=" + str(x[1]))
         requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value=" + str(x[2]))
 
-    time.sleep((i+1) * tuning_interval - time.time())
+    time.sleep((i+1) * tuning_interval + start_time - time.time())
 
     res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
     data.append(res)
@@ -96,6 +96,8 @@ model = gp.GaussianProcessRegressor(kernel=gp.kernels.Matern(), alpha=noise_leve
 x_data = []
 y_data = []
 
+start_time = time.time()
+
 # let's measure the performance for the default config first and save it
 x_data.append(normalize([5, 25, 200]))
 y_data.append(get_performance_only_tomcat([5, 25, 200], 0))
@@ -112,8 +114,6 @@ for i in range(1, initial_points):
     param_history.append([x1, x2, x3])
 
 model.fit(x_data, y_data)
-
-start_time = time.time()
 
 # use bayesian optimization
 for i in range(initial_points, iterations):
