@@ -37,7 +37,7 @@ def normalize(x):
 def get_performance_only_tomcat(x, i):
     global data
     # [keep alive, min spare threads, max threads]
-    prev_max_threads = int(requests.get("http://192.168.32.2:8080/setparam?name=maxThreads").json())
+    prev_max_threads = int(requests.get("http://192.168.32.2:8080/getparam?name=maxThreads").json())
 
     requests.put("http://192.168.32.2:8080/setparam?name=keepAliveTimeout&value="+str(x[0]))
 
