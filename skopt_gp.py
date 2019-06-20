@@ -131,10 +131,10 @@ if only_tomcat:
                       n_random_starts=init_points, n_calls=num_iter)
 elif tune_apache_keep_alive:
     res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range, apache_keep_alive_range],
-                      n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise=3.0)
+                      n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise="gaussian")
 else:
     res = gp_minimize(func=objective, dimensions=[max_clients_range, tomcat_threads_range],
-                      n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise=3.0)
+                      n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise="gaussian")
 
 
 with open(folder_name + case_name + "/results.csv", "w") as f:
