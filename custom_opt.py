@@ -169,7 +169,7 @@ for i in range(initial_points, iterations):
                     elif ei == max_expected_improvement:
                         max_points.append(x_normalized)
                         max_points_unnormalized.append(x)
-    if only_apache:
+    elif only_apache:
         for min_spare_servers in range(5, MIN_SPARE_SERVERS_MAX + 1, 5):
             for max_spare_servers in range(max(15, min_spare_servers + 1), MAX_SPARE_SERVERS_MAX + 1, 5):
                 for max_request_workers in range(max(50, max_spare_servers), MAX_REQUEST_WORKERS_MAX + 1, 10):
