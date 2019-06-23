@@ -33,7 +33,7 @@ def normalize(x):
     if only_tomcat:
         assert len(x) == 3
         return [_normalize(x[0], KEEP_ALIVE_TIMEOUT_MIN, KEEP_ALIVE_TIMEOUT_MAX),
-                _normalize(x[1], MIN_SPARE_THREADS_MIN, MIN_SPARE_SERVERS_MAX),
+                _normalize(x[1], MIN_SPARE_THREADS_MIN, MIN_SPARE_THREADS_MAX),
                 _normalize(x[2], MAX_THREADS_MIN, MAX_THREADS_MAX)]
 
     elif only_apache:
