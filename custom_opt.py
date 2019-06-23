@@ -25,13 +25,31 @@ def acquisition_function(x, model, minimum):
     return -1 * expected_improvement
 
 
+def _normalize(x, minimum, maximum):
+    return (x - minimum) / (maximum - minimum)
+
+
 def normalize(x):
     if only_tomcat:
         assert len(x) == 3
-        return [x[0] / KEEP_ALIVE_TIMEOUT_MAX, x[1] / MIN_SPARE_THREADS_MAX, x[2] / MAX_THREADS_MAX]
+        return [_normalize(x[0], KEEP_ALIVE_TIMEOUT_MIN, KEEP_ALIVE_TIMEOUT_MAX),
+                _normalize(x[1], MIN_SPARE_THREADS_MIN, MIN_SPARE_SERVERS_MAX),
+                _normalize(x[2], MAX_THREADS_MIN, MAX_THREADS_MAX)]
+
+    elif only_apache:
+        assert len(x) == 4
+        return [_normalize(x[0], MIN_SPARE_SERVERS_MIN, MIN_SPARE_SERVERS_MAX),
+                _normalize(x[1], MAX_SPARE_SERVERS_MIN, MAX_SPARE_SERVERS_MAX),
+                _normalize(x[2], MAX_REQUEST_WORKERS_MIN, MAX_REQUEST_WORKERS_MAX),
+                _normalize(x[3], KEEP_ALIVE_TIMEOUT_MIN, KEEP_ALIVE_TIMEOUT_MAX)]
+
     assert len(x) == 6
-    return [x[0] / MIN_SPARE_SERVERS_MAX, x[1] / MAX_SPARE_SERVERS_MAX, x[2] / MAX_REQUEST_WORKERS_MAX,
-            x[3] / KEEP_ALIVE_TIMEOUT_MAX, x[4] / MIN_SPARE_THREADS_MAX, x[5] / MAX_THREADS_MAX]
+    return [_normalize(x[0], MIN_SPARE_SERVERS_MIN, MIN_SPARE_SERVERS_MAX),
+            _normalize(x[1], MAX_SPARE_SERVERS_MIN, MAX_SPARE_SERVERS_MAX),
+            _normalize(x[2], MAX_REQUEST_WORKERS_MIN, MAX_REQUEST_WORKERS_MAX),
+            _normalize(x[3], KEEP_ALIVE_TIMEOUT_MIN, KEEP_ALIVE_TIMEOUT_MAX),
+            _normalize(x[4], MIN_SPARE_THREADS_MIN, MIN_SPARE_THREADS_MAX),
+            _normalize(x[5], MAX_THREADS_MIN, MAX_THREADS_MAX)]
 
 
 def get_performance_only_tomcat(x, i):
@@ -56,6 +74,10 @@ def get_performance_only_tomcat(x, i):
     return float(res[2])
 
 
+def get_performance_only_apache(x, i):
+    pass
+
+
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 case_name = sys.argv[2]
 
@@ -74,7 +96,7 @@ initial_points = 5
 
 # Apache parameters
 # minSpareServers (5, 85) 5
-# maxSpareServers (15, 95) 10
+# maxSpareServers (15, 95) 15
 # maxRequestWorkers (50, 600) 256
 # keepAliveTimeout (1, 21) 5
 
@@ -84,11 +106,19 @@ initial_points = 5
 MIN_SPARE_SERVERS_MAX = 85
 MAX_SPARE_SERVERS_MAX = 95
 MAX_REQUEST_WORKERS_MAX = 600
-KEEP_ALIVE_TIMEOUT_MAX = 21
+KEEP_ALIVE_TIMEOUT_MAX = 50
 MIN_SPARE_THREADS_MAX = 85
 MAX_THREADS_MAX = 600
 
+MIN_SPARE_SERVERS_MIN = 5
+MAX_SPARE_SERVERS_MIN = 15
+MAX_REQUEST_WORKERS_MIN = 50
+KEEP_ALIVE_TIMEOUT_MIN = 1
+MIN_SPARE_THREADS_MIN = 5
+MAX_THREADS_MIN = 50
+
 only_tomcat = True
+only_apache = False
 
 model = gp.GaussianProcessRegressor(kernel=gp.kernels.Matern(), alpha=noise_level,
                                     n_restarts_optimizer=10, normalize_y=True)
@@ -127,7 +157,6 @@ for i in range(initial_points, iterations):
             for min_spare_threads in range(5, MIN_SPARE_THREADS_MAX + 1, 5):
                 for max_threads in range(max(50, min_spare_threads), MAX_THREADS_MAX + 1, 10):
                     x = [keep_alive_timeout, min_spare_threads, max_threads]
-                    param_history.append(x)
 
                     x_normalized = normalize(x)
                     ei = gaussian_ei(np.array(x_normalized).reshape(1, -1), model, minimum)
@@ -140,6 +169,22 @@ for i in range(initial_points, iterations):
                     elif ei == max_expected_improvement:
                         max_points.append(x_normalized)
                         max_points_unnormalized.append(x)
+    if only_apache:
+        for min_spare_servers in range(5, MIN_SPARE_SERVERS_MAX + 1, 5):
+            for max_spare_servers in range(max(15, min_spare_servers + 1), MAX_SPARE_SERVERS_MAX + 1, 5):
+                for max_request_workers in range(max(50, max_spare_servers), MAX_REQUEST_WORKERS_MAX + 1, 10):
+                    for keep_alive_timeout in range(1, KEEP_ALIVE_TIMEOUT_MAX + 1, 2):
+                        x = [min_spare_servers, max_spare_servers,max_request_workers, keep_alive_timeout]
+
+                        x_normalized = normalize(x)
+                        ei = gaussian_ei(np.array(x_normalized).reshape(1, -1), model, minimum)
+
+                        if ei > max_expected_improvement:
+                            max_expected_improvement = ei
+                            max_points = [x_normalized]
+
+                        elif ei == max_expected_improvement:
+                            max_points.append(x_normalized)
     else:
         for min_spare_servers in range(5, MIN_SPARE_SERVERS_MAX + 1, 5):
             for max_spare_servers in range(max(15, min_spare_servers + 1), MAX_SPARE_SERVERS_MAX + 1, 5):
@@ -167,6 +212,7 @@ for i in range(initial_points, iterations):
     # if there're multiple points with same ei, chose randomly
     idx = random.randint(0, len(max_points) - 1)
     next_x = max_points[idx]
+    param_history.append(max_points_unnormalized[idx])
     next_y = get_performance_only_tomcat(max_points_unnormalized[idx], i)
     x_data.append(next_x)
     y_data.append(next_y)
