@@ -10,6 +10,7 @@ RU2="30"
 MI="3600"
 RD="60"
 URL="http://192.168.32.10:80"
+GETIM="false"
 
 # Interval in which performance is measured
 MEASURING_INTERVAL="60"
@@ -55,7 +56,7 @@ do
         "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
         "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
         "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
-        "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+        "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/ -GETIM ${GETIM}" > eb.log &
 
         sleep ${RU1}s
 
@@ -96,7 +97,7 @@ do
             "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
             "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
             "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
-            "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" > eb.log &
+            "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" -GETIM ${GETIM} > eb.log &
 
             sleep ${RU1}s
 
