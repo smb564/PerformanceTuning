@@ -2,22 +2,22 @@ import sys
 import requests
 import csv
 
-if sys.argv[0] == "start":
+if sys.argv[1] == "start":
     # create the file with the headers
-    folder = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
+    folder = sys.argv[2] if sys.argv[2][-1] == "/" else sys.argv[2] + "/"
     with open(folder + "summary.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(["Number of EBs", "Arrival Rate (Throughput)", "Average Response Time (ms)",
                          "99p Latency (ms)", "Std Dev", "Errors"])
 
 else:
-    ru = int(sys.argv[0])
-    mi = int(sys.argv[1])
-    rd = int(sys.argv[2])
+    ru = int(sys.argv[1])
+    mi = int(sys.argv[2])
+    rd = int(sys.argv[3])
 
-    folder = sys.argv[3] if sys.argv[3][-1] == "/" else sys.argv[3] + "/"
+    folder = sys.argv[4] if sys.argv[4][-1] == "/" else sys.argv[4] + "/"
 
-    num_ebs = int(sys.argv[4])
+    num_ebs = int(sys.argv[5])
 
     res = requests.get("http://192.168.32.2:8080/performance-mi").json()
 
