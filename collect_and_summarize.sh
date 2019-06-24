@@ -66,8 +66,7 @@ do
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
         # to finish the tests after the time eliminates
         sleep ${MI}s
-        python3 add_result_summary.py ${RU} ${MI} ${RD}
-        sleep ${RD}s
+        python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY}
 
         # reset the database
         ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
@@ -108,8 +107,7 @@ do
             nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
             # to finish the tests after the time eliminates
             sleep ${MI}s
-            python3 add_result_summary.py ${RU} ${MI} ${RD}
-            sleep ${RD}s
+            python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY}
 
             # reset the database
             ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
