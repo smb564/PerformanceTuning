@@ -9,6 +9,8 @@ throughput = []
 mean_latency = []
 threads = []
 p99_latency = []
+std_devs = []
+errors = []
 
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 
@@ -55,6 +57,8 @@ for _ in range(iterations):
     prev = res[1]
     mean_latency.append(res[2])
     p99_latency.append(res[3])
+    std_devs.append(res[4])
+    errors.append(res[5])
     threads.append(requests.get("http://192.168.32.2:8080/getparam?name=poolSize").json())
 
 
@@ -71,10 +75,10 @@ with open(folder_name + case_name + "/test_notes.csv", "w") as f:
 # save the data
 with open(out_filename, "w") as f:
     writer = csv.writer(f)
-    writer.writerow(["throughput", "latency", "threads", "p99 latency"])
+    writer.writerow(["throughput", "latency", "threads", "p99 latency", "std dev", "errors"])
 
     for i in range(len(throughput)):
-        writer.writerow([throughput[i], mean_latency[i], threads[i], p99_latency[i]])
+        writer.writerow([throughput[i], mean_latency[i], threads[i], p99_latency[i], std_devs[i], errors[i]])
 
 x_axis = [x*interval for x in range(iterations)]
 
