@@ -13,7 +13,7 @@ URL="http://192.168.32.10:80"
 GETIM="false"
 
 # Interval in which performance is measured
-MEASURING_INTERVAL="60"
+MEASURING_INTERVAL="10"
 
 # Time window to take average response time
 MEASURING_WINDOW="60"
@@ -29,9 +29,9 @@ then
     esac
 fi
 
-python3 add_result_summary.py "start" ${PARENT_FOLDER}
-
 mkdir -p ${PARENT_FOLDER}
+
+python3 add_result_summary.py "start" ${PARENT_FOLDER}
 
 for MIX in 1
 do
