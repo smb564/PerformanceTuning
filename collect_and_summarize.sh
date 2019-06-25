@@ -4,9 +4,9 @@ source venv/bin/activate
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
-RU="60"
-RU1="30"
-RU2="30"
+RU="240"
+RU1="120"
+RU2="120"
 MI="3600"
 RD="60"
 URL="http://192.168.32.10:80"
@@ -49,7 +49,6 @@ do
 
         # restart Tomcat
         ssh wso2@192.168.32.11 "./supun/scripts/restart-tomcat.sh"
-        sleep 10s
 
         # run the performance test
         nohup ssh wso2@192.168.32.6 "cd supun/dist && java -Dcom.sun.management.jmxremote " \
@@ -67,11 +66,18 @@ do
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
         # to finish the tests after the time eliminates
         sleep ${MI}s
-        python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY}
+        python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY} ${CASE_NAME}
+
+        ssh wso2@192.168.32.10 "sudo /etc/init.d/nginx stop"
+        ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
+
+        echo "Resetting the database $(date)"
 
         # reset the database
         ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
         ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
+
+        echo "Database reset completed $(date)"
 
         for THREAD in 50 100 200
         do
@@ -108,12 +114,18 @@ do
             nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
             # to finish the tests after the time eliminates
             sleep ${MI}s
-            python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY}
+            python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY} ${CASE_NAME}
+
+            ssh wso2@192.168.32.10 "sudo /etc/init.d/nginx stop"
+            ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
+
+            echo "Resetting the database $(date)"
 
             # reset the database
             ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
             ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
 
+            echo "Database reset completed $(date)"
         done
     done
 done
