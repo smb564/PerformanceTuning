@@ -68,8 +68,13 @@ with open(folder_name + case_name + "/test_notes.csv", "w") as f:
     writer.writerow(["duration (seconds)", duration])
     writer.writerow(["measuring interval (seconds)", interval])
     writer.writerow(["tuning interval (seconds)", tuning_interval])
-    writer.writerow(["average throughput (req/sec)", sum(throughput)/len(throughput)]) # TODO: This is not the correct number, should get the total count and divide by total time
-    writer.writerow(["average latency (ms)", sum(mean_latency)/len(mean_latency)]) # TODO: this is avearge of 1 minute window latencies
+    # writer.writerow(["average throughput (req/sec)", sum(throughput)/len(throughput)]) # TODO: This is not the correct number, should get the total count and divide by total time
+    # writer.writerow(["average latency (ms)", sum(mean_latency)/len(mean_latency)]) # TODO: this is avearge of 1 minute window latencies
+    # let's take the average for the measuring interval from the server
+    res = requests.get("http://192.168.32.2:8080/performance-mi").json()
+    writer.writerow(["average throughput (req/sec)", res[1] / measuring_interval])
+    writer.writerow(["average latency (ms)", res[2]])
+    writer.writerow(["99p latency (ms)", res[3]])
 
 
 # save the data
