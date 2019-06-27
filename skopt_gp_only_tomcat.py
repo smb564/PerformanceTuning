@@ -32,7 +32,7 @@ prev_param = int(requests.get("http://192.168.32.2:8080/getparam?name=minSpareTh
 
 
 def objective(p):
-    x = p
+    x = p[0]
     print("Setting fixed thread pool size to " + str(x))
     global prev_param
     # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
