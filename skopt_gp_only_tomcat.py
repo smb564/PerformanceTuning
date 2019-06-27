@@ -4,11 +4,10 @@ import csv
 import sys
 import os
 from skopt import gp_minimize
+from skopt import space
 
 folder_name = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
 case_name = sys.argv[2]
-only_tomcat = False
-tune_apache_keep_alive = True
 
 try:
     os.makedirs(folder_name+case_name)
@@ -24,7 +23,7 @@ data = []
 param_history = []
 test_duration = ru + mi + rd
 tuning_interval = tune_interval  # in seconds
-init_points = 8  # number of points to explore randomly initially
+init_points = 6  # number of points to explore randomly initially
 num_iter = test_duration // tuning_interval
 
 
@@ -33,9 +32,7 @@ prev_param = int(requests.get("http://192.168.32.2:8080/getparam?name=minSpareTh
 
 
 def objective(p):
-    x = p[0]
-    y = p[1]
-
+    x = p
     print("Setting fixed thread pool size to " + str(x))
     global prev_param
     # let's make this a fixed thread pool by maintaining minSpareThreads=maxThreads
@@ -49,24 +46,25 @@ def objective(p):
         requests.put("http://192.168.32.2:8080/setparam?name=minSpareThreads&value="+str(int(x)))
         requests.put("http://192.168.32.2:8080/setparam?name=maxThreads&value="+str(int(x)))
 
-    requests.put("http://192.168.32.2:8080/setparam?name=keepAliveTimeout&value="+str(int(y)))
-
     prev_param = int(x)
     time.sleep(tuning_interval)
     res = requests.get("http://192.168.32.2:8080/performance?server=client").json()
     data.append(res)
 
-    param_history.append([int(x), int(y)])
+    param_history.append([int(x)])
 
+    # res[2] average response time
+    # res[3] 99p latency
     print("Mean response time : " + str(res[2]))
-    return float(res[2])
+    print("99p time : " + str(res[3]))
+
+    return float(res[3])
 
 
-tomcat_threads_range = (20, 600)
-tomcat_keep_alive_range = (1, 21)
+tomcat_threads_range = space.Integer(20, 600, "normalize")
 
-res = gp_minimize(func=objective, dimensions=[tomcat_threads_range, tomcat_keep_alive_range],
-                  n_random_starts=init_points, n_calls=num_iter, acq_func="EI", noise=3.0)
+res = gp_minimize(func=objective, dimensions=[tomcat_threads_range],
+                  n_random_starts=init_points, n_calls=num_iter, acq_func="EI")
 
 
 with open(folder_name + case_name + "/results.csv", "w") as f:
