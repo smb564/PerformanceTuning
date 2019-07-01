@@ -94,7 +94,7 @@ do
             # restart Tomcat
             ssh wso2@192.168.32.11 "./supun/scripts/restart-tomcat.sh"
             sleep 10s
-
+            curl 192.168.32.2:8080/reconnect
             curl -XPUT "http://192.168.32.2:8080/setparam?name=minSpareThreads&value=${THREAD}"
             curl -XPUT "http://192.168.32.2:8080/setparam?name=maxThreads&value=${THREAD}"
 
