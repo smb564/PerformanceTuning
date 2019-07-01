@@ -7,10 +7,10 @@ MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 RU="240"
 RU1="120"
 RU2="120"
-MI="3600"
-RD="60"
-URL="http://192.168.32.10:80"
-GETIM="false"
+MI="1200"
+RD="120"
+URL="http://192.168.32.2:80"
+GETIM="true"
 
 # Interval in which performance is measured
 MEASURING_INTERVAL="10"
@@ -18,7 +18,7 @@ MEASURING_INTERVAL="10"
 # Time window to take average response time
 MEASURING_WINDOW="60"
 
-PARENT_FOLDER="nginx_dataset/browsing/"
+PARENT_FOLDER="nginx_dataset/dataset/"
 
 if [[ -d "${PARENT_FOLDER}" ]]
 then
@@ -33,9 +33,9 @@ mkdir -p ${PARENT_FOLDER}
 
 python3 add_result_summary.py "start" ${PARENT_FOLDER}
 
-for MIX in 1
+for MIX in 2 3 1
 do
-    for CONCURRENCY in 350 700 1050 1260 1400 1750
+    for CONCURRENCY in 350 700 1050 1400 1750
     do
         FOLDER_NAME="${PARENT_FOLDER}/${MIX2NAME[${MIX}]}_${CONCURRENCY}"
         ssh wso2@192.168.32.6 "cd supun/dist && mkdir -p $FOLDER_NAME"
@@ -71,13 +71,14 @@ do
         ssh wso2@192.168.32.10 "sudo /etc/init.d/nginx stop"
         ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
 
-        echo "Resetting the database $(date)"
-
-        # reset the database
-        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
-        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
-
-        echo "Database reset completed $(date)"
+        sleep ${RD}s
+#        echo "Resetting the database $(date)"
+#
+#        # reset the database
+#        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
+#        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
+#
+#        echo "Database reset completed $(date)"
 
         for THREAD in 50 100 200
         do
@@ -93,8 +94,8 @@ do
 
             # restart Tomcat
             ssh wso2@192.168.32.11 "./supun/scripts/restart-tomcat.sh"
-            sleep 10s
             curl 192.168.32.2:8080/reconnect
+            sleep 10s
             curl -XPUT "http://192.168.32.2:8080/setparam?name=minSpareThreads&value=${THREAD}"
             curl -XPUT "http://192.168.32.2:8080/setparam?name=maxThreads&value=${THREAD}"
 
@@ -106,7 +107,6 @@ do
             "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" -GETIM ${GETIM} > eb.log &
 
             sleep ${RU1}s
-
             # reconnect the monitor server to the new Tomcat instance
             curl 192.168.32.2:8080/reconnect
             sleep ${RU2}s
@@ -119,13 +119,23 @@ do
             ssh wso2@192.168.32.10 "sudo /etc/init.d/nginx stop"
             ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
 
-            echo "Resetting the database $(date)"
+            sleep ${RD}s
 
-            # reset the database
-            ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
-            ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
-
-            echo "Database reset completed $(date)"
+#            echo "Resetting the database $(date)"
+#
+#            # reset the database
+#            ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
+#            ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
+#
+#            echo "Database reset completed $(date)"
         done
+
+        echo "Resetting the database $(date)"
+
+        # reset the database
+        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 < drop_and_create.sql"
+        ssh wso2@192.168.32.11 "mysql -u root -h 192.168.32.7 -pjavawso2 tpcw < tpcw-dump.sql"
+
+        echo "Database reset completed $(date)"
     done
 done
