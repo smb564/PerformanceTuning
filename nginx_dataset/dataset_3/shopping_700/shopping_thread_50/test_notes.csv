@@ -1,0 +1,6 @@
+duration (seconds),1200
+measuring interval (seconds),10
+tuning interval (seconds),-1
+average throughput (req/sec),98.85583333333334
+average latency (ms),31.63577431781972
+99p latency (ms),297
