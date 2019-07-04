@@ -64,9 +64,19 @@ do
         sleep ${RU2}s
 
         nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
+
+        nohup ssh wso2@192.168.32.11 "sar -q 1 ${MI} > tomcat.sar"
+        nohup ssh wso2@192.168.32.2 "sar -q 1 ${MI} > nginx.sar"
+        nohup ssh wso2@192.168.32.7 "sar -q 1 ${MI} > mysql.sar"
+
         # to finish the tests after the time eliminates
         sleep ${MI}s
         python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY} ${CASE_NAME}
+
+        ssh wso2@192.168.32.11 "cat tomcat.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/tomcat
+        ssh wso2@192.168.32.2 "cat nginx.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/nginx
+        ssh wso2@192.168.32.7 "cat mysql.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/mysql
+
 
         ssh wso2@192.168.32.10 "sudo /etc/init.d/nginx stop"
         ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
@@ -112,9 +122,18 @@ do
             sleep ${RU2}s
 
             nohup python3 client_side_metrics.py "$FOLDER_NAME" "$CASE_NAME" "0" "$MI" "0" "$MEASURING_INTERVAL" "${MEASURING_WINDOW}"> client_side.txt &
+
+            nohup ssh wso2@192.168.32.11 "sar -q 1 ${MI} > tomcat.sar"
+            nohup ssh wso2@192.168.32.2 "sar -q 1 ${MI} > nginx.sar"
+            nohup ssh wso2@192.168.32.7 "sar -q 1 ${MI} > mysql.sar"
+
             # to finish the tests after the time eliminates
             sleep ${MI}s
             python3 add_result_summary.py ${RU} ${MI} ${RD} ${PARENT_FOLDER} ${CONCURRENCY} ${CASE_NAME}
+
+            ssh wso2@192.168.32.11 "cat tomcat.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/tomcat
+            ssh wso2@192.168.32.2 "cat nginx.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/nginx
+            ssh wso2@192.168.32.7 "cat mysql.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/mysql
 
             ssh wso2@192.168.32.10 "sudo /etc/init.d/nginx stop"
             ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
