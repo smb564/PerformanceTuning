@@ -1,0 +1,17 @@
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+shopping_thread_1,350,47.12916666666667,385.2103085491999,2671,577.4816757445277,6
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+shopping_1050_thread_1,1050,4.44,172015.77777777778,532479,112619.24901443467,6299
+browsing_1050_thread_1,1050,65.91166666666666,5703.739803272056,115199,18470.95962965627,2881
+ordering_1050_thread_1,1050,5.54,143202.0312876053,464895,104035.62262468736,6443
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+shopping_1050_thread_25,1050,147.34333333333333,33.76809266339389,315,73.18355544637164,12
+shopping_1050_thread_700,1050,148.41166666666666,33.8764921895179,319,71.08283232073954,20
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+shopping_1050_thread_1000,1050,148.465,41.52784606921946,359,100.73689687056846,6
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+shopping_100_thread_1000,100,1.0383333333333333,2201.4012841091494,70655,19674.152855147357,1238
+Threads,Number of EBs,Arrival Rate (Throughput),Average Response Time (ms),99p Latency (ms),Std Dev,Errors
+shopping_50_thread_1000,50,2.57,1447.1932555123217,54015,15660.431739662841,488
