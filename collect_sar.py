@@ -1,5 +1,6 @@
 import sys
 import csv
+import os
 
 
 def get_queue_length_stats(content):
@@ -31,6 +32,8 @@ def get_queue_length_stats(content):
 summary, result = get_queue_length_stats(sys.stdin.read())
 
 save_path = sys.argv[1] if sys.argv[1][-1] == "/" else sys.argv[1] + "/"
+
+os.makedirs(save_path)
 
 with open(save_path + "load_average_summary.csv", "w") as f:
     writer = csv.writer(f)
