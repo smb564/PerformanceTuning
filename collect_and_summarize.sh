@@ -68,6 +68,7 @@ do
         nohup ssh wso2@192.168.32.11 "sar -q 1 ${MI} > tomcat.sar" &
         nohup ssh wso2@192.168.32.2 "sar -q 1 ${MI} > nginx.sar" &
         nohup ssh wso2@192.168.32.7 "sar -q 1 ${MI} > mysql.sar" &
+        nohup ssh wso2@192.168.32.6 "sar -q 1 ${MI} > rbe.sar" &
 
         # to finish the tests after the time eliminates
         sleep ${MI}s
@@ -76,7 +77,7 @@ do
         ssh wso2@192.168.32.11 "cat tomcat.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/tomcat
         ssh wso2@192.168.32.2 "cat nginx.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/nginx
         ssh wso2@192.168.32.7 "cat mysql.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/mysql
-
+        ssh wso2@192.168.32.6 "cat rbe.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/rbe
 
         ssh wso2@192.168.32.2 "sudo /etc/init.d/nginx stop"
         ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
@@ -126,6 +127,7 @@ do
             nohup ssh wso2@192.168.32.11 "sar -q 1 ${MI} > tomcat.sar" &
             nohup ssh wso2@192.168.32.2 "sar -q 1 ${MI} > nginx.sar" &
             nohup ssh wso2@192.168.32.7 "sar -q 1 ${MI} > mysql.sar" &
+            nohup ssh wso2@192.168.32.6 "sar -q 1 ${MI} > rbe.sar" &
 
             # to finish the tests after the time eliminates
             sleep ${MI}s
@@ -134,6 +136,7 @@ do
             ssh wso2@192.168.32.11 "cat tomcat.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/tomcat
             ssh wso2@192.168.32.2 "cat nginx.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/nginx
             ssh wso2@192.168.32.7 "cat mysql.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/mysql
+            ssh wso2@192.168.32.6 "cat rbe.sar" | python3 collect_sar.py ${FOLDER_NAME}/${CASE_NAME}/rbe
 
             ssh wso2@192.168.32.2 "sudo /etc/init.d/nginx stop"
             ssh wso2@192.168.32.11 "./supun/scripts/stop-tomcat.sh"
