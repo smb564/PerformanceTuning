@@ -4,13 +4,14 @@ source venv/bin/activate
 declare -A MIX2NAME
 MIX2NAME=( ["1"]="browsing" ["2"]="shopping" ["3"]="ordering")
 
-RU="240"
-RU1="120"
-RU2="120"
-MI="1200"
+RU="60"
+RU1="30"
+RU2="30"
+MI="600"
 RD="120"
 URL="http://192.168.32.2:80"
 GETIM="true"
+TT="0"
 
 # Interval in which performance is measured
 MEASURING_INTERVAL="10"
@@ -40,7 +41,7 @@ do
         FOLDER_NAME="${PARENT_FOLDER}/${MIX2NAME[${MIX}]}_${CONCURRENCY}"
         ssh wso2@192.168.32.6 "cd supun/dist && mkdir -p $FOLDER_NAME"
 
-        CASE_NAME="default"
+        CASE_NAME="${MIX2NAME[${MIX}]}_default"
 
         # restart nginx
         ssh wso2@192.168.32.2 "sudo /etc/init.d/nginx stop"
@@ -55,7 +56,7 @@ do
         "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
         "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
         "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
-        "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/ -GETIM ${GETIM}" > eb.log &
+        "-ITEM 1000 -TT ${TT} -MAXERROR 0 -WWW ${URL}/tpcw/ -GETIM ${GETIM}" > eb.log &
 
         sleep ${RU1}s
 
@@ -96,7 +97,7 @@ do
             FOLDER_NAME="${PARENT_FOLDER}/${MIX2NAME[${MIX}]}_${CONCURRENCY}"
             ssh wso2@192.168.32.6 "cd supun/dist && mkdir -p $FOLDER_NAME"
 
-            CASE_NAME="thread_${THREAD}"
+            CASE_NAME="${MIX2NAME[${MIX}]}_thread_${THREAD}"
 
             # restart nginx
             ssh wso2@192.168.32.2 "sudo /etc/init.d/nginx stop"
@@ -115,7 +116,7 @@ do
             "-Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false " \
             "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false " \
             "-jar rbe.jar -WINDOW ${MEASURING_WINDOW} -EB rbe.EBTPCW${MIX}Factory $CONCURRENCY -OUT $FOLDER_NAME/$CASE_NAME.m -RU $RU -MI $MI -RD $RD " \
-            "-ITEM 1000 -TT 1 -MAXERROR 0 -WWW ${URL}/tpcw/" -GETIM ${GETIM} > eb.log &
+            "-ITEM 1000 -TT ${TT} -MAXERROR 0 -WWW ${URL}/tpcw/" -GETIM ${GETIM} > eb.log &
 
             sleep ${RU1}s
             # reconnect the monitor server to the new Tomcat instance
